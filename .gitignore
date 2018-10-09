@@ -42,3 +42,5 @@ hs_err_pid*
 /src/main/webapp/WEB-INF/classes
 /src/main/webapp/WEB-INF/statics.lib
 /classes
+/target
+target/
