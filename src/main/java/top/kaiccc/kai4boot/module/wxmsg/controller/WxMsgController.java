@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2018-10-09 16:45
  */
 @RestController
-@RequestMapping("/dict/dict")
+@RequestMapping("/wx")
 public class WxMsgController {
 }

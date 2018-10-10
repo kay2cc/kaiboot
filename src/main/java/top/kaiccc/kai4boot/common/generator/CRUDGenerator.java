@@ -87,7 +87,7 @@ public class CRUDGenerator {
         strategy.setInclude(scanner("表名"));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.entityTableFieldAnnotationEnable(true);
-        strategy.setTablePrefix("kaiccc_");
+        strategy.setTablePrefix("kai_");
 
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());

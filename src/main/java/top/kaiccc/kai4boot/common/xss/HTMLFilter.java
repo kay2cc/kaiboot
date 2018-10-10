@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * String input = ...
  * String clean = new HTMLFilter().filter( input );
  *
- * The class is not thread safe. Create a new instance if in doubt.
+ * The class is not job safe. Create a new instance if in doubt.
  *
  * If you find bugs or have suggestions on improvement (especially regarding
  * performance), please contact us.  The latest version of this
