@@ -79,7 +79,7 @@ public class SpiderPipelineServiceImpl implements Pipeline {
 
         } else if (StrUtil.equalsIgnoreCase(ESpiderType.smzdm.toString(), record.getType())){
 
-            return StrUtil.format("\r\r### 猫粮：{} \r\r### 价格：{} \r\r ![img]({}) \r\r## [点我查看详情]({}) \r\r 创建时间：{} \r\rId：{}",
+            return StrUtil.format("\r\r### 名称：{} \r\r### 价格：{} \r\r ![img]({}) \r\r## [点我查看详情]({}) \r\r 创建时间：{} \r\rId：{}",
                                     record.getTitle(),
                                     result.get("price"),
                                     result.get("imageUrl"),
