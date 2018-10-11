@@ -4,7 +4,8 @@ server:
         uri-encoding: UTF-8
         max-threads: 1000
         min-spare-threads: 30
-    port: 8888
+        max-http-header-size: 8192
+    port: 666
     connection-timeout: 5000ms
     servlet:
       context-path: /kai4boot
@@ -71,6 +72,15 @@ spring:
             config:
               multi-statement-allow: true
 
+logging:
+  level:
+    root: info
+  #      top.kaiccc.kai4boot: debug
+  path: logs/
+  file: kai4boot.log
+
+
+
 #mybatis
 mybatis-plus:
     #实体扫描，多个package用逗号或者分号分隔
@@ -90,11 +100,3 @@ mybatis-plus:
         logic-not-delete-value: 1
         db-type: mysql
         #刷新mapper 调试神器
-
-logging:
-    level:
-      root: info
-#      top.kaiccc.kai4boot: debug
-    path: logs/
-    file: kai4boot.log
-
