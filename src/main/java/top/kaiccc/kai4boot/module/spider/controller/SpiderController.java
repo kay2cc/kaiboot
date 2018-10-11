@@ -1,6 +1,7 @@
 package top.kaiccc.kai4boot.module.spider.controller;
 
 
+import cn.hutool.http.HtmlUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class SpiderController {
     @ApiOperation(value = "爬虫管理-保存", notes = "爬虫管理-保存")
     @PostMapping("/config/save")
     public RestResponse save (SpiderConfig spiderConfig){
+        spiderConfig.setUrl(HtmlUtil.unescape(spiderConfig.getUrl()));
         configService.save(spiderConfig);
         return RestResponse.success();
     }
