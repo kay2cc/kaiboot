@@ -1,6 +1,7 @@
 package top.kaiccc.kai4boot.module.spider.entity;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -105,6 +106,7 @@ public class SpiderRecord implements Serializable {
     }
 
     public SpiderRecord(String type, String title, String url) {
+        this.id = IdUtil.simpleUUID();
         this.type = type;
         this.title = title;
         this.url = url;

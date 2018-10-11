@@ -93,7 +93,8 @@ mybatis-plus:
 
 logging:
     level:
-      top.kaiccc.kai4boot: debug
+      root: info
+#      top.kaiccc.kai4boot: debug
     path: logs/
     file: kai4boot.log
 

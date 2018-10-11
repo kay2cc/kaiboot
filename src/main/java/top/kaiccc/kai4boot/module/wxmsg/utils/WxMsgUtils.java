@@ -15,17 +15,17 @@ import java.util.Map;
  * @author kaiccc
  * @date 2018-10-08 11:12
  */
-public class WxMsgUtile {
+public class WxMsgUtils {
 
     private static final Log log = LogFactory.get();
 
     public static void sendMessage(SpiderRecord record, String sendkey){
         Map<String, Object> map = CollUtil.newHashMap();
 
-        log.info(record.getTitle(), record.getDetail());
+        log.info(record.getDetail());
         map.put("sendkey", sendkey);
         map.put("text", StrUtil.subPre(record.getTitle(),75));
-        map.put("desp", record.getDetail() + " \n ID: " + record.getId());
+        map.put("desp", record.getDetail());
 
         HttpRequest.post("https://pushbear.ftqq.com/sub").form(map).execute().body();
     }
