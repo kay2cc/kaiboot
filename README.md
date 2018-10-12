@@ -10,13 +10,15 @@
 
 ## 使用技术
 
-1. SpringBoot    https://github.com/renrenio/renren-security
-2. Mybatis-Plus https://github.com/baomidou/mybatis-plus
-3. webmagic     https://github.com/code4craft/webmagic
-4. hutool           https://github.com/looly/hutool
+1. SpringBoot     https://github.com/renrenio/renren-security
+2. Mybatis-Plus   https://github.com/baomidou/mybatis-plus
+3. webmagic       https://github.com/code4craft/webmagic
+4. hutool         https://github.com/looly/hutool
 
+## 鸣谢
+Server酱的微信推送。简单高效
 
-
+http://sc.ftqq.com/3.version
 
 
 
