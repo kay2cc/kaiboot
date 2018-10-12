@@ -69,7 +69,7 @@ public class SpiderPipelineServiceImpl implements Pipeline {
 
         if (StrUtil.equalsIgnoreCase(ESpiderType.mp4ba.toString(), record.getType())){
 
-            return StrUtil.format("\r\r### 电影名：{} \r\r> {} \r\r ![img]({}) \r\r ## [点我查看详情]({}) \r\r 创建时间：{}\r\rId:{}",
+            return StrUtil.format("\r\r ### 类型：mp4ba \r\r### 电影名：{} \r\r> {} \r\r ![img]({}) \r\r ## [点我查看详情]({}) \r\r `创建时间：{}`\r\r`Id:{}`",
                                             record.getTitle(),
                                             result.get("info"),
                                             result.get("imageUrl"),
@@ -79,7 +79,8 @@ public class SpiderPipelineServiceImpl implements Pipeline {
 
         } else if (StrUtil.equalsIgnoreCase(ESpiderType.smzdm.toString(), record.getType())){
 
-            return StrUtil.format("\r\r### 名称：{} \r\r### 价格：{} \r\r ![img]({}) \r\r## [点我查看详情]({}) \r\r 创建时间：{} \r\rId：{}",
+            return StrUtil.format("\r\r ### 类型：{} \r\r### 商品名称：{} \r\r### 价格：{} \r\r ![img]({}) \r\r## [点我查看详情]({}) \r\r `创建时间：{}` \r\r`Id：{}`",
+                                    result.get("searchKey"),
                                     record.getTitle(),
                                     result.get("price"),
                                     result.get("imageUrl"),

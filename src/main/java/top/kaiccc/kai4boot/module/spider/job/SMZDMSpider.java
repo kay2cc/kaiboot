@@ -39,6 +39,7 @@ public class SMZDMSpider implements PageProcessor {
             map.put("imageUrl", "http://" + StrUtil.subSuf(imgSelect.xpath("//img/@src").toString(),2));
             map.put("url",  imgSelect.xpath("//a/@href").toString());
             map.put("wxKey", smzdmConfig.getWxKey());
+            map.put("searchKey", smzdmConfig.getSearchKey());
             smzdmList.add(map);
         }
         page.putField("spiderList", smzdmList);

@@ -43,7 +43,7 @@ spring:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.mysql.jdbc.Driver
       druid:
-        url: jdbc:mysql://api.kaiccc.top:3306/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        url: jdbc:mysql://127.0.0.1:3306/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
         username: root
         password: pass1234
         initial-size: 10
