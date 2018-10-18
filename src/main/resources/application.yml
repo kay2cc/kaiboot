@@ -23,8 +23,19 @@ spring:
             enabled: true
     mvc:
         throw-exception-if-no-handler-found: true
+        static-path-pattern: /static/**
+
     resources:
         add-mappings: false
+    thymeleaf:
+        cache: false # 开发时关闭缓存,不然没法看到实时页面
+        encoding: UTF-8
+        mode: html5
+        prefix: classpath:/WEB-INF/views/
+        servlet:
+          content-type: text/html
+
+
     redis:
       open: false  # 是否开启redis缓存  true开启   false关闭
       database: 0
@@ -43,7 +54,7 @@ spring:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.mysql.jdbc.Driver
       druid:
-        url: jdbc:mysql://127.0.0.1:3306/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        url: jdbc:mysql://api.kaiccc.top:3306/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
         username: root
         password: pass1234
         initial-size: 10
