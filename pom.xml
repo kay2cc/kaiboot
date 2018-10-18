@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<swagger.version>2.8.0</swagger.version>
-		<hutool.version>4.1.15</hutool.version>
+		<hutool.version>4.1.18</hutool.version>
 		<fastjson.version>1.2.45</fastjson.version>
         <mybatisplus.version>3.0.3</mybatisplus.version>
         <mysql.version>5.1.38</mysql.version>
