@@ -23,15 +23,16 @@ spring:
             enabled: true
     mvc:
         throw-exception-if-no-handler-found: true
-        static-path-pattern: /static/**
+        static-path-pattern: /static/**/**
 
     resources:
         add-mappings: false
+        static-locations: /META-INF/resources, classpath:/resources/, classpath:/static/
     thymeleaf:
         cache: false # 开发时关闭缓存,不然没法看到实时页面
         encoding: UTF-8
-        mode: html5
-        prefix: classpath:/WEB-INF/views/
+        prefix: classpath:/views/
+        suffix: .html
         servlet:
           content-type: text/html
 

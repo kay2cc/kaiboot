@@ -2,6 +2,8 @@ package top.kaiccc.kai4boot.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -9,10 +11,16 @@ import java.util.List;
 /**
  * WebMvc配置
  *
- * @author Mark sunlightcs@gmail.com
  */
+@EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+    }
+
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         /*MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
