@@ -1,6 +1,7 @@
 package top.kaiccc.kai4boot.module.spider.job;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import top.kaiccc.kai4boot.common.enums.ESpiderType;
 import top.kaiccc.kai4boot.module.spider.entity.SpiderConfig;
 import us.codecraft.webmagic.Page;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class Mp4BaSpider implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
+    private Site site = Site.me().setRetryTimes(3).setSleepTime(3000);
     private SpiderConfig mp4baConfig;
 
     @Override
@@ -35,7 +36,7 @@ public class Mp4BaSpider implements PageProcessor {
             Map<String, Object> map = CollUtil.newHashMap();
             map.put("type", ESpiderType.mp4ba.toString());
             map.put("title", page.getHtml().$(".folder.last", "text").get());
-            map.put("url", page.getUrl().get());
+            map.put("url", StrUtil.trim(page.getUrl().get()));
             map.put("imageUrl", page.getHtml().$(".intro").xpath("/div/img/@src").get());
             map.put("info", page.getHtml().$(".intro").xpath("/div/p[1]/text()").get());
             map.put("wxKey", mp4baConfig.getWxKey());

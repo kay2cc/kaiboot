@@ -46,7 +46,7 @@ public class SpiderJobScheduled {
 
 
 //    @Scheduled(cron = "0 */1 * * * ?")
-    @Scheduled(cron = "0 */20 * * * ?")
+    @Scheduled(cron = "20 5 0/1 * * ? ")
     public void smzdmScheduled(){
         log.info(" smzdmScheduled start !!!");
         List<SpiderConfig> smzdmConfigList = configService.list(new QueryWrapper<SpiderConfig>()
@@ -67,9 +67,9 @@ public class SpiderJobScheduled {
                 .addPipeline(spiderPipelineService)
                 .addUrl(url)
                 //开启5个线程抓取
-                .thread(3)
-                //启动爬虫(异步)
-                .start();
+                .thread(1)
+                //启动爬虫(同步)
+                .run();
     }
 
 

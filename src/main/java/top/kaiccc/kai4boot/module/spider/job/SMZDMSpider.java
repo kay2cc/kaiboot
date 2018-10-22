@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class SMZDMSpider implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
+    private Site site = Site.me().setRetryTimes(3).setSleepTime(3000);
     private SpiderConfig smzdmConfig;
 
     @Override
@@ -37,7 +37,7 @@ public class SMZDMSpider implements PageProcessor {
             map.put("title", imgSelect.xpath("//img/@alt").toString());
             map.put("price", StrUtil.trim(feedHtml.$(".z-highlight", "text").toString()));
             map.put("imageUrl", "http://" + StrUtil.subSuf(imgSelect.xpath("//img/@src").toString(),2));
-            map.put("url",  imgSelect.xpath("//a/@href").toString());
+            map.put("url",  StrUtil.trim(imgSelect.xpath("//a/@href").toString()));
             map.put("wxKey", smzdmConfig.getWxKey());
             map.put("searchKey", smzdmConfig.getSearchKey());
             smzdmList.add(map);

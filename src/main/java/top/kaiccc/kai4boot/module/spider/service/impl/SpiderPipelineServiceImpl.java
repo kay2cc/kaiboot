@@ -1,6 +1,5 @@
 package top.kaiccc.kai4boot.module.spider.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -51,8 +50,9 @@ public class SpiderPipelineServiceImpl implements Pipeline {
             }
 
             spiderRecord.setDetail(editWxPushMsg(spiderRecord, result));
-            SpiderRecord record = recordService.getOne(new QueryWrapper<SpiderRecord>().eq("title", spiderRecord.getTitle()));
-            if (ObjectUtil.isNull(record)){
+            int count =  recordService.count(new QueryWrapper<SpiderRecord>().eq("url", spiderRecord.getUrl()));
+
+            if (count == 0){
                 try {
                     recordService.save(spiderRecord);
                 }catch (Exception e){
