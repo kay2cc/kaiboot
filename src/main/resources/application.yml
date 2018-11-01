@@ -56,7 +56,7 @@ spring:
       driverClassName: com.mysql.jdbc.Driver
       druid:
         url: jdbc:mysql://127.0.0.1:3506/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
-        username: root
+        username: kaiccc
         password: pass1234
 
         initial-size: 10
