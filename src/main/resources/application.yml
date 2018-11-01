@@ -5,7 +5,7 @@ server:
         max-threads: 1000
         min-spare-threads: 30
         max-http-header-size: 8192
-    port: 666
+    port: 80
     connection-timeout: 5000ms
     servlet:
       context-path: /kai4boot
@@ -55,9 +55,10 @@ spring:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.mysql.jdbc.Driver
       druid:
-        url: jdbc:mysql://127.0.0.1:3306/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        url: jdbc:mysql://127.0.0.1:3506/kai4boot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
         username: root
         password: pass1234
+
         initial-size: 10
         max-active: 100
         min-idle: 10
