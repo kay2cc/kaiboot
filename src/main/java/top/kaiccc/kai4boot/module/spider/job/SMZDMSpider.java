@@ -2,6 +2,7 @@ package top.kaiccc.kai4boot.module.spider.job;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 import top.kaiccc.kai4boot.common.enums.ESpiderType;
 import top.kaiccc.kai4boot.module.spider.entity.SpiderConfig;
 import us.codecraft.webmagic.Page;
@@ -15,11 +16,11 @@ import java.util.Map;
 
 /**
  * 什么值得买  爬虫分析
- *
  * @author kaiccc
+ * @date 2018-11-02 13:57
  */
+@Slf4j
 public class SMZDMSpider implements PageProcessor {
-
     private Site site = Site.me().setRetryTimes(3).setSleepTime(3000);
     private SpiderConfig smzdmConfig;
 
@@ -38,7 +39,7 @@ public class SMZDMSpider implements PageProcessor {
             map.put("price", StrUtil.trim(feedHtml.$(".z-highlight", "text").toString()));
             map.put("imageUrl", "http://" + StrUtil.subSuf(imgSelect.xpath("//img/@src").toString(),2));
             map.put("url",  StrUtil.trim(imgSelect.xpath("//a/@href").toString()));
-            map.put("wxKey", smzdmConfig.getWxKey());
+            map.put("wxKey", smzdmConfig.getWxPushKey());
             map.put("searchKey", smzdmConfig.getSearchKey());
             smzdmList.add(map);
         }

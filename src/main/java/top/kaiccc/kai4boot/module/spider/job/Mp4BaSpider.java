@@ -2,6 +2,7 @@ package top.kaiccc.kai4boot.module.spider.job;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 import top.kaiccc.kai4boot.common.enums.ESpiderType;
 import top.kaiccc.kai4boot.module.spider.entity.SpiderConfig;
 import us.codecraft.webmagic.Page;
@@ -14,12 +15,11 @@ import java.util.Map;
 
 /**
  * Mp4Ba 爬虫解析
- *
  * @author kaiccc
- * @date 2018-10-08 10:12
+ * @date 2018-11-02 13:47
  */
+@Slf4j
 public class Mp4BaSpider implements PageProcessor {
-
     private Site site = Site.me().setRetryTimes(3).setSleepTime(3000);
     private SpiderConfig mp4baConfig;
 
@@ -39,7 +39,7 @@ public class Mp4BaSpider implements PageProcessor {
             map.put("url", StrUtil.trim(page.getUrl().get()));
             map.put("imageUrl", page.getHtml().$(".intro").xpath("/div/img/@src").get());
             map.put("info", page.getHtml().$(".intro").xpath("/div/p[1]/text()").get());
-            map.put("wxKey", mp4baConfig.getWxKey());
+            map.put("wxKey", mp4baConfig.getWxPushKey());
             spiderList.add(map);
         }
         page.putField("spiderList", spiderList);
