@@ -5,7 +5,7 @@ server:
     max-threads: 1000
     min-spare-threads: 30
     max-http-header-size: 8192
-  port: 800
+  port: 80
   connection-timeout: 5000ms
   servlet:
     context-path: /kai4boot
@@ -46,7 +46,8 @@ spring:
     driver-class-name: org.h2.Driver
     sql-script-encoding: utf-8
     #url: jdbc:h2:mem:kai4boot
-    url: jdbc:h2:E:/h2/database
+    #url: jdbc:h2:E:/h2/database
+    url: jdbc:h2:/home/www/h2/database
     username: kai
     password: kaiccc
     #schema: classpath:db/schema.sql
