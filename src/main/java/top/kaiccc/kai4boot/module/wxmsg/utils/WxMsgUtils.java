@@ -3,8 +3,6 @@ package top.kaiccc.kai4boot.module.wxmsg.utils;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 import top.kaiccc.kai4boot.module.spider.entity.SpiderRecord;
 
 import java.util.Map;
@@ -16,7 +14,8 @@ import java.util.Map;
  * @date 2018-10-08 11:12
  */
 public class WxMsgUtils {
-    public static void sendMessage(SpiderRecord record, String sendkey){
+
+    public static synchronized void sendMessage(SpiderRecord record, String sendkey){
         Map<String, Object> map = CollUtil.newHashMap();
         map.put("sendkey", sendkey);
         map.put("text", StrUtil.subPre(record.getTitle(),75));
@@ -24,4 +23,5 @@ public class WxMsgUtils {
 
         HttpRequest.post("https://pushbear.ftqq.com/sub").form(map).execute().body();
     }
+
 }

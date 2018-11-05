@@ -1,11 +1,6 @@
 package top.kaiccc.kai4boot.common.utils;
 
-import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author kaiccc
@@ -13,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedisUtils {
-    @Autowired
+    /*@Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private ValueOperations<String, String> valueOperations;
@@ -25,9 +20,9 @@ public class RedisUtils {
     private SetOperations<String, Object> setOperations;
     @Autowired
     private ZSetOperations<String, Object> zSetOperations;
-    /**  默认过期时长，单位：秒 */
+    *//**  默认过期时长，单位：秒 *//*
     public final static long DEFAULT_EXPIRE = 60 * 60 * 24;
-    /**  不设置过期时长 */
+    *//**  不设置过期时长 *//*
     public final static long NOT_EXPIRE = -1;
     private final static Gson gson = new Gson();
 
@@ -70,9 +65,9 @@ public class RedisUtils {
         redisTemplate.delete(key);
     }
 
-    /**
+    *//**
      * Object转成JSON数据
-     */
+     *//*
     private String toJson(Object object){
         if(object instanceof Integer || object instanceof Long || object instanceof Float ||
                 object instanceof Double || object instanceof Boolean || object instanceof String){
@@ -81,10 +76,10 @@ public class RedisUtils {
         return gson.toJson(object);
     }
 
-    /**
+    *//**
      * JSON数据，转成Object
-     */
+     *//*
     private <T> T fromJson(String json, Class<T> clazz){
         return gson.fromJson(json, clazz);
-    }
+    }*/
 }

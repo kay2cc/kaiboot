@@ -63,8 +63,8 @@ public class SpiderJobScheduled {
                 .addPipeline(spiderPipelineService)
                 .addUrl(url)
                 //开启5个线程抓取
-                .thread(1)
+                .thread(3)
                 //启动爬虫(同步)
-                .run();
+                .start();
     }
 }
