@@ -24,4 +24,13 @@ public class WxMsgUtils {
         HttpRequest.post("https://pushbear.ftqq.com/sub").form(map).executeAsync().body();
     }
 
+    public static void sendMessage(String sendkey, String text, String desp){
+        Map<String, Object> map = CollUtil.newHashMap();
+        map.put("sendkey", sendkey);
+        map.put("text", StrUtil.subPre(text,75));
+        map.put("desp", desp);
+
+        HttpRequest.post("https://pushbear.ftqq.com/sub").form(map).executeAsync().body();
+    }
+
 }

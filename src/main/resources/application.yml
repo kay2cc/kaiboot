@@ -76,3 +76,5 @@ logging:
   path: logs/
   file: kai4boot.log
 
+wx:
+  sendkey: 6496-4c4fa63accad466079b7f46315be1c50
