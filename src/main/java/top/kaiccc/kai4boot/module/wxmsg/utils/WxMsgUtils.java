@@ -15,13 +15,13 @@ import java.util.Map;
  */
 public class WxMsgUtils {
 
-    public static synchronized void sendMessage(SpiderRecord record, String sendkey){
+    public static void sendMessage(SpiderRecord record, String sendkey){
         Map<String, Object> map = CollUtil.newHashMap();
         map.put("sendkey", sendkey);
         map.put("text", StrUtil.subPre(record.getTitle(),75));
         map.put("desp", record.getDetail());
 
-        HttpRequest.post("https://pushbear.ftqq.com/sub").form(map).execute().body();
+        HttpRequest.post("https://pushbear.ftqq.com/sub").form(map).executeAsync().body();
     }
 
 }
