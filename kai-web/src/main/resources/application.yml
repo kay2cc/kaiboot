@@ -13,14 +13,6 @@ spring:
   resources:
     add-mappings: false
     static-locations: classpath:/static/
-  thymeleaf:
-    cache: true # 开发时关闭缓存,不然没法看到实时页面
-    encoding: UTF-8
-    prefix: classpath:/views/
-    suffix: .html
-    servlet:
-      content-type: text/html
-    check-template-location: false
   redis:
     open: false   # 是否开启redis缓存  true开启   false关闭
     database: 0
