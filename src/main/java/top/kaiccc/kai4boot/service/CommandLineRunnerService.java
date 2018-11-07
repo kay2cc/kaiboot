@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import top.kaiccc.kai4boot.module.wxmsg.utils.WxMsgUtils;
+import top.kaiccc.kai4boot.common.utils.WxMsgUtils;
 
 @Order(value=2)
 @Component

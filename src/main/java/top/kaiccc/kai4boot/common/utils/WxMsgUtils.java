@@ -1,4 +1,4 @@
-package top.kaiccc.kai4boot.module.wxmsg.utils;
+package top.kaiccc.kai4boot.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;

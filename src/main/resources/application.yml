@@ -12,7 +12,7 @@ spring:
     static-path-pattern: /static/**/**
   resources:
     add-mappings: false
-    static-locations: /META-INF/resources, classpath:/resources/, classpath:/static/
+    static-locations: classpath:/static/
   thymeleaf:
     cache: true # 开发时关闭缓存,不然没法看到实时页面
     encoding: UTF-8
@@ -39,8 +39,8 @@ spring:
     driver-class-name: org.h2.Driver
     sql-script-encoding: utf-8
     #url: jdbc:h2:mem:kai4boot
-    #url: jdbc:h2:E:/h2/database
-    url: jdbc:h2:/home/www/h2/database
+    url: jdbc:h2:E:/h2/database
+    #url: jdbc:h2:/home/www/h2/database
     username: kai
     password: kaiccc
     #schema: classpath:db/schema.sql
@@ -77,4 +77,11 @@ logging:
   file: kai4boot.log
 
 wx:
+  miniapp:
+    configs:
+      - appid: wxf8b92203f32cee25
+        secret: d43045a3c4b1d6e7d3ef7f8bfc044e2a
+        token: hjax3tsw
+        aesKey: ftIdgBq3koKXsI0RzaHKnlyqlvobXmwxM4ROYjjJuja
+        msgDataFormat: JSON
   sendkey: 6496-4c4fa63accad466079b7f46315be1c50

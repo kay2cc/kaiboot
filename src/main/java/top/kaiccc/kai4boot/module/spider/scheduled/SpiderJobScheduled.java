@@ -35,7 +35,7 @@ public class SpiderJobScheduled {
     @Autowired
     private SpiderPipelineService spiderPipelineService;
 
-    @Scheduled(cron = "35 0 10,17,18,19,20 * * ?")
+//    @Scheduled(cron = "35 0 10,17,18,19,20 * * ?")
     public void mp4BaScheduled() {
         log.info(" mp4BaScheduled start !!!");
         SpiderConfig mp4baConfig = configRepository.findAllByTypeIs(ESpiderType.mp4ba.toString()).get(0);
@@ -43,7 +43,7 @@ public class SpiderJobScheduled {
         runSpider(mp4baConfig.getUrl(), new Mp4BaSpider(mp4baConfig));
     }
 
-    @Scheduled(cron = "20 5 0/1 * * ? ")
+//    @Scheduled(cron = "20 5 0/1 * * ? ")
     public void smzdmScheduled() {
         log.info(" smzdmScheduled start !!!");
 

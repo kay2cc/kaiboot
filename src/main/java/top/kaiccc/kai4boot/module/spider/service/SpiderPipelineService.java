@@ -10,7 +10,7 @@ import top.kaiccc.kai4boot.common.enums.ESpiderType;
 import top.kaiccc.kai4boot.module.spider.entity.SpiderRecord;
 import top.kaiccc.kai4boot.module.spider.repository.SpiderConfigRepository;
 import top.kaiccc.kai4boot.module.spider.repository.SpiderRecordRepository;
-import top.kaiccc.kai4boot.module.wxmsg.utils.WxMsgUtils;
+import top.kaiccc.kai4boot.common.utils.WxMsgUtils;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
