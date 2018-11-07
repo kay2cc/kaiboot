@@ -4,20 +4,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>top.kaiccc</groupId>
 	<artifactId>kai4boot</artifactId>
-	<version>1.2.0</version>
-	<packaging>jar</packaging>
+	<version>2.0.1</version>
+    <modules>
+        <module>kai-common</module>
+        <module>kai-admin</module>
+        <module>kai-spider</module>
+        <module>kai-web</module>
+    </modules>
+    <packaging>pom</packaging>
 	<description>kai4boot</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.3.RELEASE</version>
+		<version>2.0.5.RELEASE</version>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<kai.version>2.0.1</kai.version>
 		<swagger.version>2.8.0</swagger.version>
 		<hutool.version>4.1.18</hutool.version>
 		<fastjson.version>1.2.45</fastjson.version>
