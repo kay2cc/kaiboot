@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import top.kaiccc.kai4boot.common.base.BaseController;
+import top.kaiccc.kai4boot.entity.User;
 import top.kaiccc.kai4boot.common.utils.RestResponse;
 import top.kaiccc.kai4boot.dto.UserDto;
-import top.kaiccc.kai4boot.entity.User;
 import top.kaiccc.kai4boot.repository.UserRepository;
 import top.kaiccc.kai4boot.service.UserService;
 

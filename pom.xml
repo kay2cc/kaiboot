@@ -9,7 +9,6 @@
         <module>kai-common</module>
         <module>kai-admin</module>
         <module>kai-spider</module>
-        <module>kai-web</module>
     </modules>
     <packaging>pom</packaging>
 	<description>kai4boot</description>
@@ -25,7 +24,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <java.version>1.8</java.version>
-		<kai.version>2.0.1</kai.version>
 		<swagger.version>2.8.0</swagger.version>
 		<hutool.version>4.1.18</hutool.version>
 		<fastjson.version>1.2.45</fastjson.version>
@@ -109,29 +107,6 @@
             <version>${hutool.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>us.codecraft</groupId>
-            <artifactId>webmagic-core</artifactId>
-            <version>${webmagic.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>us.codecraft</groupId>
-            <artifactId>webmagic-extension</artifactId>
-            <version>${webmagic.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
 <!--        <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-mp</artifactId>
@@ -149,24 +124,6 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<fork>true</fork>
-				</configuration>
-			</plugin>
-			<!-- 跳过单元测试 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
-			</plugin>
-
-		</plugins>
 	</build>
 
 	<repositories>

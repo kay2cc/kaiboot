@@ -1,7 +1,7 @@
 package top.kaiccc.kai4boot.common.xss;
 
 import cn.hutool.core.util.StrUtil;
-import top.kaiccc.kai4boot.common.exception.KaiException;
+import top.kaiccc.kai4boot.common.exception.RestException;
 
 
 /**
@@ -32,7 +32,7 @@ public class SQLFilter {
         //判断是否包含非法字符
         for(String keyword : keywords){
             if(str.contains(keyword)){
-                throw new KaiException("包含非法字符");
+                throw new RestException("包含非法字符");
             }
         }
 
