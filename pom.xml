@@ -9,6 +9,7 @@
         <module>kai-common</module>
         <module>kai-admin</module>
         <module>kai-spider</module>
+        <module>kai-ym</module>
     </modules>
     <packaging>pom</packaging>
 	<description>kai4boot</description>
