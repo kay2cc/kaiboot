@@ -1,47 +1,47 @@
 package top.kaiccc.kai4boot.ym.http;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.google.gson.Gson;
+import top.kaiccc.kai4boot.ym.job.YueMiaoJob;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author kaiccc
  * @date 2018-12-08 16:17
  */
-public class YueMiaoHttp {
+public class YueMiaoHttp{
     private static final Log log = LogFactory.get();
 
     public static void main(String[] args) {
         YueMiaoHttp ym = new YueMiaoHttp();
-        //CronUtil.start();
-        ym.run();
+        //ym.run();
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(() -> {
+            log.debug("Scheduled Start !!!!");
+            if (DateUtil.hour(new Date(), true) == 9){
+                ym.run();
+                executorService.shutdown();
+                log.debug("Scheduled End !!!!");
+            }
+
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     public void run(){
-        log.debug("Job Start !");
-        // 配置文件
+
         YmConfig config = YmConfig.get();
-        log.info(new Gson().toJson(config));
-
-        Map<String, List<String>> headers = MapUtil.newHashMap();
-        headers.put("User-Agent", CollUtil.newArrayList(config.getUserAgent()));
-        headers.put("sk", CollUtil.newArrayList(config.getSk()));
-        headers.put("tk", CollUtil.newArrayList(config.getTk()));
-
-        HttpResponse response = HttpRequest.get(config.getTestUrl())
-                                            .header(headers, true)
-                                            .cookie(config.getCookie()).execute();
-        log.info(response.body());
-        log.debug(response.toString());
-
-
-
+        log.debug("创建配置对象 OK : {}", new Gson().toJson(config));
+        for (int i=0; i<config.getThreadNum(); i++){
+            ThreadUtil.execute(new YueMiaoJob(config));
+        }
+        log.debug("{}个线程创建完毕", config.getThreadNum());
     }
 }
