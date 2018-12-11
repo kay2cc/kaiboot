@@ -83,7 +83,7 @@ public class YmConfig {
         List<String> depaCodeList = Arrays.asList(set.getStr("depaCodeList").split(","));
         config.setDepaCodeList(depaCodeList);
         config.setLinkmanId("458515");
-        config.setVaccineCode("8803");
+        config.setVaccineCode("8801");
         config.setVaccineIndex("1");
 
         config.setTestUrl("https://wx.healthych.com/base/department/pageList.do?cityName=&offset=0&limit=10&regionCode=510109&isOpen=1&longitude=&latitude=");

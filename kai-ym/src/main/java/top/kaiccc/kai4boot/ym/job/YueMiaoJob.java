@@ -1,5 +1,6 @@
 package top.kaiccc.kai4boot.ym.job;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -17,23 +18,23 @@ import java.util.List;
  * @author kaiccc
  * @date 2018-12-08 16:17
  */
-public class YueMiaoJob extends Thread {
+public class YueMiaoJob {
     private static final Log log = LogFactory.get();
     private YmConfig config;
 
-    @Override
     public void run() {
-        try {
-            log.debug("Thread Start !");
-            for (String depaCode : config.getDepaCodeList()) {
 
+        log.debug("Http Start !");
+        for (String depaCode : config.getDepaCodeList()) {
+            try {
                 /*
                  * 取到 诊所育苗id vaccines.getId();
                  */
                 HttpResponse vaccinesResponse = this.yuMiaoHttpResponse(config, StrUtil.format(config.getVaccinesUrl(), depaCode, ""));
                 VaccinesDto vaccinesDto = new Gson().fromJson(vaccinesResponse.body(), VaccinesDto.class);
-                if (vaccinesDto.getData().size() == 0 ){
-                    log.error("{} 诊所没有九价预定，了解一下。", depaCode);
+                if (!vaccinesDto.getCode().equals("0000") || vaccinesDto.getData().size() == 0) {
+                    log.error("{} 失败，了解一下。{}", depaCode, vaccinesResponse.body());
+                    continue;
                 }
                 for (VaccinesDto.Vaccines vaccines : vaccinesDto.getData()) {
                     if (vaccines.getCode().equals(config.getVaccineCode())) {
@@ -66,16 +67,39 @@ public class YueMiaoJob extends Thread {
                          */
                         String submitUrl = StrUtil.format(config.getSubmitUrl(),
                                 depaCode, config.getVaccineCode(), config.getVaccineIndex(), config.getLinkmanId(), workDay, workTimes, vaccines.getId());
-                        HttpResponse submitHttpResponse = this.yuMiaoHttpResponse(config, submitUrl);
-                        log.info("提交成功，成不成功就看着一波了。 {}", submitHttpResponse.body());
-                        log.debug("提交成功");
+
+                        this.submit(config.getTestUrl());
+                        /*HttpResponse submitHttpResponse = this.yuMiaoHttpResponse(config, submitUrl);
+                        log.info("提交成功，成不成功就看着一波了。 {}", submitHttpResponse.body());*/
                     }
                 }
+            } catch (Exception e) {
+                log.error(e);
             }
-            log.debug("Thread End !");
-        } catch (Exception e) {
-            log.error(e);
         }
+        log.debug("Http End !");
+    }
+
+    private void submit(String url) {
+        log.debug("submit start !!! {} ", url);
+        for (int i = 0; i < config.getThreadNum(); i++) {
+
+            ThreadUtil.execute(new Thread(() -> {
+                try {
+                    HttpResponse httpResponse = HttpRequest.get(url)
+                            .timeout(20 * 60 * 1000)
+                            .header(config.getHeaders(), true)
+                            .cookie(config.getCookie())
+                            .execute();
+                    log.debug(httpResponse.toString());
+                }catch (Exception e){
+                    log.error(e, "线程异常");
+                }
+            }));
+            log.info("第{}个线程创建完毕！", i);
+        }
+
+        log.info("提交完成，成不成功就看着一波了。 {}");
     }
 
     private HttpResponse yuMiaoHttpResponse(YmConfig config, String url) {
