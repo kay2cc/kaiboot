@@ -28,7 +28,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>kai4boot</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
