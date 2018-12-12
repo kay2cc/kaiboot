@@ -76,4 +76,5 @@ wx:
         token: hjax3tsw
         aesKey: ftIdgBq3koKXsI0RzaHKnlyqlvobXmwxM4ROYjjJuja
         msgDataFormat: JSON
-  sendkey: 6496-4c4fa63accad466079b7f46315be1c50
+  test-sendkey: 6496-4c4fa63accad466079b7f46315be1c50
+  sldp-sendkey: 6081-920770083f6d9c16a3ecd21cdd08c597

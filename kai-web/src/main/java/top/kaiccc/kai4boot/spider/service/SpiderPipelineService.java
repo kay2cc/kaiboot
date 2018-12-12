@@ -7,6 +7,7 @@ import cn.hutool.log.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.kaiccc.kai4boot.common.enums.ESpiderType;
+import top.kaiccc.kai4boot.common.utils.WxMsgUtils;
 import top.kaiccc.kai4boot.spider.entity.SpiderRecord;
 import top.kaiccc.kai4boot.spider.repository.SpiderConfigRepository;
 import top.kaiccc.kai4boot.spider.repository.SpiderRecordRepository;
@@ -56,17 +57,20 @@ public class SpiderPipelineService implements Pipeline {
                 }catch (Exception e){
                     log.error(e);
                 }
-                //WxMsgUtils.sendMessage(spiderRecord, result.get("wxKey"));
+                sendMessage(spiderRecord, result.get("wxKey"));
             }
         }catch (Exception e){
             log.error(e);
         }
     }
 
+    private void sendMessage(SpiderRecord record, String sendkey) {
+        WxMsgUtils.sendMessage(sendkey, StrUtil.subPre(record.getTitle(), 75), record.getDetail());
+    }
+
     private String editWxPushMsg(SpiderRecord record, Map<String, String> result){
 
         if (StrUtil.equalsIgnoreCase(ESpiderType.mp4ba.toString(), record.getType())){
-
             return StrUtil.format("\r\r ### 类型：mp4ba \r\r### 电影名：{} \r\r> {} \r\r ![img]({}) \r\r ## [点我查看详情]({}) \r\r `创建时间：{}`\r\r`Id:{}`",
                     record.getTitle(),
                     result.get("info"),
@@ -74,9 +78,7 @@ public class SpiderPipelineService implements Pipeline {
                     record.getUrl(),
                     record.getCreateTime(),
                     record.getId());
-
         } else if (StrUtil.equalsIgnoreCase(ESpiderType.smzdm.toString(), record.getType())){
-
             return StrUtil.format("\r\r ### 类型：{} \r\r### 商品名称：{} \r\r### 价格：{} \r\r ![img]({}) \r\r## [点我查看详情]({}) \r\r `创建时间：{}` \r\r`Id：{}`",
                     result.get("searchKey"),
                     record.getTitle(),

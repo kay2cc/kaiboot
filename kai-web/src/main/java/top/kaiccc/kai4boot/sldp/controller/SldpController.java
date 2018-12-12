@@ -1,9 +1,11 @@
 package top.kaiccc.kai4boot.sldp.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.kaiccc.kai4boot.common.utils.RestResponse;
+import top.kaiccc.kai4boot.sldp.service.SldpService;
 
 /**
  * @author kaiccc
@@ -12,8 +14,13 @@ import top.kaiccc.kai4boot.common.utils.RestResponse;
 @RestController
 @RequestMapping("/sldp")
 public class SldpController {
-    @PostMapping("")
+
+    @Autowired
+    private SldpService sldpService;
+
+    @GetMapping("")
     public RestResponse index (){
+        sldpService.orderWxScheduledPush();
         return RestResponse.success();
     }
 }

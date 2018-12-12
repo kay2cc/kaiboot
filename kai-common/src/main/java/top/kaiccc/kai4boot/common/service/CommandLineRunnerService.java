@@ -18,7 +18,7 @@ public class CommandLineRunnerService implements CommandLineRunner {
     private String projectName;
     @Value("${server.port}")
     private String port;
-    @Value("${wx.sendkey}")
+    @Value("${wx.test-sendkey}")
     private String sendkey;
 
 

@@ -71,14 +71,14 @@ public class SpiderController {
             config.setId(UUID.randomUUID().toString());
             config.setSearchKey("http://www\\.mp4ba\\.com/\\?m=vod-detail-id-\\d+\\.html");
             config.setUrl("http://www.mp4ba.com");
-            config.setWxPushKey("6043-b8df07847e206f079a0e0682d8032fcd");
+            config.setWxPushKey("6496-4c4fa63accad466079b7f46315be1c50");
             config.setType(ESpiderType.mp4ba.toString());
             spiderConfigRepository.save(config);
 
             config.setId(UUID.randomUUID().toString());
             config.setSearchKey("日用品囤货");
             config.setUrl("http://search.smzdm.com/?c=faxian&s={}&v=b");
-            config.setWxPushKey("6081-920770083f6d9c16a3ecd21cdd08c597");
+            config.setWxPushKey("6496-4c4fa63accad466079b7f46315be1c50");
             config.setType(ESpiderType.smzdm.toString());
             spiderConfigRepository.save(config);
         }

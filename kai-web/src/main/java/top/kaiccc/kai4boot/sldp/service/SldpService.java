@@ -10,6 +10,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import top.kaiccc.kai4boot.common.utils.RuoKuaiUtils;
 import top.kaiccc.kai4boot.common.utils.WxMsgUtils;
@@ -32,6 +33,8 @@ import java.util.Map;
 @Slf4j
 public class SldpService {
 
+    @Value("${wx.sldp-sendkey}")
+    private String SLDP_WX_KEY;
     private static final String DATE_FORMAT = "MM月dd日";
     /**
      * 30 验证码 URL
@@ -61,11 +64,14 @@ public class SldpService {
         int month = DateUtil.month(new Date()) + 1;
         try {
             this.login();
-            WxMsgUtils.sendMessage("6496-4c4fa63accad466079b7f46315be1c50", yesterdayFormat+"-四川业绩情况统计", this.findOrderList(yesterday, yesterday));
-            WxMsgUtils.sendMessage("6496-4c4fa63accad466079b7f46315be1c50", month +"月至今-四川业绩情况统计", this.findOrderList(monthStartDate, monthEndDate));
+            WxMsgUtils.sendMessage(SLDP_WX_KEY, yesterdayFormat+"-四川业绩情况统计", this.findOrderList(yesterday, yesterday, "yesterday"));
+            WxMsgUtils.sendMessage(SLDP_WX_KEY, month +"月至今-四川业绩情况统计", this.findOrderList(monthStartDate, monthEndDate, ""));
         } catch (Exception e) {
             log.error("异常了兄弟：", e);
-            WxMsgUtils.sendMessage("4c4fa63accad466079b7f46315be1c50", "业绩查询失败", e.getMessage());
+            WxMsgUtils.sendMessage(SLDP_WX_KEY,
+                    "查询失败",
+                    StrUtil.format("### 查询失败，请呼叫皮皮猪\n\n ### [点击重新推送]({})",
+                    "http://api.kaiccc.top/kai4boot/sldp"));
         }
         log.info("orderWxScheduledPush end !");
     }
@@ -89,10 +95,8 @@ public class SldpService {
         JSONObject bodyJson = new JSONObject(loginResponse.body());
 
         if (!"0".equals(bodyJson.getStr("code"))){
-            throw new Exception("### 登录失败，请呼叫皮皮猪");
+            throw new Exception("登录失败");
         }
-
-        log.info(loginResponse.toString());
     }
 
     /**
@@ -102,7 +106,7 @@ public class SldpService {
      * @return
      * @throws Exception
      */
-    private String findOrderList(String startDate, String endDate) throws Exception {
+    private String findOrderList(String startDate, String endDate, String type) throws Exception {
         String url = StrUtil.format(ORDER_URL, startDate, endDate);
 
         HttpResponse orderResponse = HttpRequest.get(url).execute();
@@ -110,24 +114,51 @@ public class SldpService {
         OrderListDto orderListDto = new Gson().fromJson(orderResponse.body(), OrderListDto.class);
         log.debug(orderResponse.toString());
         if (ObjectUtil.isNull(orderListDto) || orderListDto.getCode() != 0){
-            throw new Exception(StrUtil.format("### 查询失败，请呼叫皮皮猪！{} {}", startDate, endDate));
+            throw new Exception("查询失败");
         }
-        return this.formatWxPushMsg(orderListDto);
+        return this.formatWxPushMsg(orderListDto, type);
     }
 
     /**
      * 推送消息格式化
      * @return
      */
-    private String formatWxPushMsg(OrderListDto orderListDto){
-        return StrUtil.format("### 订单合计：{} \r" +
-                "### 实付金额合计：{} \r" +
-                "### 可用PV合计：{} \r" +
-                "`发送时间：{}` \r",
-                orderListDto.getData().getCount(),
-                orderListDto.getData().getPayment_amount(),
-                orderListDto.getData().getPv(),
-                DateUtil.now());
+    private String formatWxPushMsg(OrderListDto orderListDto, String type){
+        StringBuilder orderMsg = new StringBuilder(StrUtil.format("订单合计|实付金额合计|PV合计\n" +
+                        ":--:|:--:|:--:\n" +
+                        "{}|{}|{}\n\n\n",
+                orderListDto.getData().getCount(), orderListDto.getData().getPayment_amount(), orderListDto.getData().getPv()));
+
+        if ("yesterday".equals(type)){
+            int i=1;
+            for (OrderListDto.DataBean.ListBean order : orderListDto.getData().getList()){
+
+                String msg = StrUtil.format(" ## {}. {} \n" +
+                                "购买人|订单金额|实付金额|产生PV|订单类型\n" +
+                                ":--:|:--:|:--:|:--:|:--:\n" +
+                                "{}|{}|{}|{}|{} \n" +
+                                "- 单号：{} \n" +
+                                "- 下单时间：{} \n" +
+                                "- 支付时间：{} \n" +
+                                "- 收货人：{} \n" +
+                                "- 收货地址：{} \n" +
+                                "- 联系人：{} \n",
+                                i,order.getPay_real_name(),
+                        order.getPay_real_name(), order.getTotal_fee(), order.getPayment_amount(), order.getPV(), order.getOrder_type_name(),
+                        order.getOrder_no(), order.getCreate_time(), order.getPayment_time(), order.getReceipt_man(), order.getReceipt_addr(), order.getReceipt_tel());
+
+                orderMsg.append(msg);
+                i++;
+                StringBuilder infoList = new StringBuilder();
+                for (OrderListDto.DataBean.ListBean.GoodsInfoBean info : order.getGoodsInfo()){
+                    infoList.append(info.getSpec_name()).append("、");
+                }
+                orderMsg.append(StrUtil.format("> {} \n\n", infoList));
+            }
+        }
+        orderMsg.append(StrUtil.format("\n `发送时间：{}`", DateUtil.now()));
+
+        return orderMsg.toString();
     }
 
 }
