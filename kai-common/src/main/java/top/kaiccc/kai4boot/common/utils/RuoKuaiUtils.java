@@ -21,7 +21,7 @@ public class RuoKuaiUtils {
         HttpResponse ruoKuaResponse = HttpRequest.post("http://api.ruokuai.com/create.json")
                 .body(RuoKuaiUtils.ruoKuaiConfig(imgBase64))
                 .execute();
-        log.debug(ruoKuaResponse.toString());
+        log.info(ruoKuaResponse.toString());
         return new JSONObject(ruoKuaResponse.body()).getStr("Result");
     }
 

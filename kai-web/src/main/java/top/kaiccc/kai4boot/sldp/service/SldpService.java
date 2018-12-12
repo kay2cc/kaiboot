@@ -93,9 +93,9 @@ public class SldpService {
                 .form(loginForm)
                 .execute();
         JSONObject bodyJson = new JSONObject(loginResponse.body());
-
+        log.info(loginResponse.toString());
         if (!"0".equals(bodyJson.getStr("code"))){
-            throw new Exception("登录失败");
+            throw new Exception("login error");
         }
     }
 

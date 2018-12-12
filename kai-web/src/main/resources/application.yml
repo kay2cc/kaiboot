@@ -64,7 +64,7 @@ spring:
 logging:
   level:
     root: info
-  #      top.kaiccc.kai4boot: debug
+    top.kaiccc.kai4boot: debug
   path: logs/
   file: kai4boot.log
 
