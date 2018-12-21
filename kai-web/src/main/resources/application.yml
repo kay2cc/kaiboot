@@ -1,7 +1,7 @@
 server:
-  port: 80
+  port: 9900
   servlet:
-      context-path: /kai4boot
+      context-path: /
 
 spring:
   jackson:
@@ -50,7 +50,7 @@ spring:
       path: /h2web
       enabled: true
       settings:
-        web-allow-others: true
+        web-allow-others: true  #远程访问
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false

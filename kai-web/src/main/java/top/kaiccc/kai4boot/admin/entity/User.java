@@ -23,8 +23,8 @@ public class User {
     /**
      * 用户名
      */
-    @Column(name = "name", length = 32)
-    private String name;
+    @Column(name = "username", length = 32)
+    private String username;
 
     /**
      * 密码
@@ -73,6 +73,5 @@ public class User {
      */
     @Column(name = "updat_time", length = 13)
     private long updateTime;
-
 
 }

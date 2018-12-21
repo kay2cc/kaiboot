@@ -17,7 +17,7 @@ public class UserDto {
     /**
      * 用户名
      */
-    private String name;
+    private String username;
 
     /**
      * 密码
@@ -62,6 +62,7 @@ public class UserDto {
     public static User form(UserDto userDto){
         User user = new User();
         BeanUtil.copyProperties(userDto, user);
+
         return user;
     }
 }

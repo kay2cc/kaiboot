@@ -1,16 +1,12 @@
 package top.kaiccc.kai4boot.common.service;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NetUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import top.kaiccc.kai4boot.common.utils.WxMsgUtils;
 
 import java.util.LinkedHashSet;
 
@@ -31,11 +27,13 @@ public class CommandLineRunnerService implements CommandLineRunner {
     public void run(String... args) {
         log.info("http://localhost:{}{} Successful startup", port, projectName);
         LinkedHashSet<String> ips =  NetUtil.localIpv4s();
-        WxMsgUtils.sendMessage(sendkey, projectName + "服务器启动成功",
+  /*      WxMsgUtils.sendMessage(sendkey, projectName + "服务器启动成功",
                 StrUtil.format("#### 服务器启动成功 \n" +
                         "#### ip：{} \n" +
+                        "#### 端口：{} \n" +
                         "#### 启动时间：{}\n ",
                         new Gson().toJson(ips),
-                        DateUtil.now()));
+                        port,
+                        DateUtil.now()));*/
     }
 }

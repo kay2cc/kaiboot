@@ -23,10 +23,12 @@ public class UserService {
     public void save(User user){
         long nowTime = System.currentTimeMillis();
 
+        user.setUsername(user.getUsername().toLowerCase());
         if (StrUtil.isEmpty(user.getId())){
             user.setCreateTime(nowTime);
-            if (isExistingUser(user.getName())){
-                throw new RestException(StrUtil.format("{} 用户名称已存在，请更换用户名！", user.getName()));
+
+            if (isExistingUser(user.getUsername())){
+                throw new RestException(StrUtil.format("{} 用户名称已存在，请更换用户名！", user.getUsername()));
             }
         }
         user.setUpdateTime(nowTime);
@@ -39,12 +41,12 @@ public class UserService {
      * @return
      */
     private boolean isExistingUser(String name){
-        User user = findUserByName(name);
+        User user = findUserByUsername(name.toLowerCase());
         return ObjectUtil.isNotNull(user) && StrUtil.isNotBlank(user.getId());
     }
 
-    public User findUserByName(String name){
-        return userRepository.findUserByName(name);
+    public User findUserByUsername(String name){
+        return userRepository.findUserByUsername(name.toLowerCase());
     }
 
     @Autowired
