@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import top.kaiccc.kai4boot.admin.dto.UserDto;
 
@@ -52,7 +51,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             log.error("用户信息不能为空： ", e);
             return null;
-        } catch (UsernameNotFoundException e){
+        } catch (Exception e){
             log.error("登录失败", e);
             return null;
         }
