@@ -1,4 +1,4 @@
-package top.kaiccc.kai4boot.user.service;
+package top.kaiccc.kai4boot.user.security;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +27,20 @@ public class UserSecurityServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("userName : " + username);
+
         User user = userService.findUserByUsername(username);
         if (ObjectUtil.isNull(user)){
             throw new UsernameNotFoundException(username + " 用户不存在");
         }
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority("ADMIN"));
 
         return from(user, authorityList);
     }
+
+
 
     private SecurityUser from(User user, List<SimpleGrantedAuthority> authorityList){
         return new SecurityUser(user.getUsername(), user.getPassword(),authorityList);

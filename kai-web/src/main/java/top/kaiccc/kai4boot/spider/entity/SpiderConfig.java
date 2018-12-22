@@ -18,7 +18,7 @@ public class SpiderConfig {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
+    @Column(name = "id" , length = 36)
     private String id;
     /**
      * 类型

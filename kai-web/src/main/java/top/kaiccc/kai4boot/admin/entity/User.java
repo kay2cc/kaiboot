@@ -17,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", length = 32)
+    @Column(name = "id", length = 36)
     private String id;
 
     /**
@@ -29,7 +29,7 @@ public class User {
     /**
      * 密码
      */
-    @Column(name = "password", length = 32)
+    @Column(name = "password")
     private String password;
 
     /**

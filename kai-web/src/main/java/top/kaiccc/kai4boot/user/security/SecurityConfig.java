@@ -1,14 +1,17 @@
 package top.kaiccc.kai4boot.user.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import top.kaiccc.kai4boot.user.service.UserSecurityServiceImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author kaiccc
@@ -16,19 +19,20 @@ import top.kaiccc.kai4boot.user.service.UserSecurityServiceImpl;
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final UserSecurityServiceImpl securityService;
+
     @Autowired
-    private UserSecurityServiceImpl securityService;
-    @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    public SecurityConfig(UserSecurityServiceImpl securityService) {
+        this.securityService = securityService;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.securityService);
+        auth.userDetailsService(this.securityService).passwordEncoder(passwordEncoder());
     }
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -48,14 +52,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/h2web/**"
             ).permitAll()
             .antMatchers("/admin/user/**").permitAll()        //添加用户接口
-            .anyRequest().authenticated();  // 除上诉内容，全部页面都要验证
+            .anyRequest().authenticated();                                // 除上诉内容，全部页面都要验证
 
         http
             .formLogin()                                        //  定义当需要用户登录时候，转到的登录页面。
-            .loginPage("/static/login.html")                    // 登录页
-            .loginProcessingUrl("/admin/user/login")            // 自定义的登录接口
-            .successHandler(authenticationSuccessHandler);       //登录成功处理
+            .loginPage("/static/403.html");                    // 登录页
 
+            //.successHandler(authenticationSuccessHandler);       //登录成功处理
+
+        // 添加JWT filter
+        http.addFilter(new JwtLoginFilter(authenticationManager()))
+            .addFilter(new JwtAuthenticationFilter(authenticationManager()));
+
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
