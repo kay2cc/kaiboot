@@ -3,7 +3,7 @@ package top.kaiccc.kai4boot.user.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author kaiccc
@@ -23,15 +24,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserSecurityServiceImpl securityService;
+    private final JwtAuthenticationFilter authenticationFilter;
 
     @Autowired
-    public SecurityConfig(UserSecurityServiceImpl securityService) {
+    public SecurityConfig(UserSecurityServiceImpl securityService, JwtAuthenticationFilter authenticationFilter) {
         this.securityService = securityService;
+        this.authenticationFilter = authenticationFilter;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.securityService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(securityService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -43,27 +46,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()            //拦截页面
             .antMatchers(                   //静态资源 无授权访问
-                    HttpMethod.GET,
                     "/",
                     "/static/**",
                     "/swagger-ui.html",
                     "/webjars/**",
                     "/swagger-resources/**",
                     "/v2/**",
-                    "/h2web/**"
+                    "/h2web/**/**",
+                    "/admin/user/login/**"
             ).permitAll()
             .anyRequest().authenticated();                                // 除上诉内容，全部页面都要验证
 
         // 添加JWT filter
-        http.addFilter(new JwtLoginFilter(authenticationManager()))
-            .addFilter(new JwtAuthenticationFilter(authenticationManager()));
-        http.exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // 异常统一处理
+        http.exceptionHandling().authenticationEntryPoint(getAuthenticationEntryPoint());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationEntryPoint getAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint();
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
 }

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.kaiccc.kai4boot.admin.entity.User;
-import top.kaiccc.kai4boot.admin.service.UserService;
+import top.kaiccc.kai4boot.admin.repository.UserRepository;
 import top.kaiccc.kai4boot.user.entity.SecurityUser;
 
 import java.util.ArrayList;
@@ -25,12 +25,12 @@ import java.util.List;
 public class UserSecurityServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userService.findUserByUsername(username);
+        User user = userRepository.findUserByUsername(username);
         if (ObjectUtil.isNull(user)){
             throw new UsernameNotFoundException(username + " 用户不存在");
         }
@@ -39,8 +39,6 @@ public class UserSecurityServiceImpl implements UserDetailsService {
 
         return from(user, authorityList);
     }
-
-
 
     private SecurityUser from(User user, List<SimpleGrantedAuthority> authorityList){
         return new SecurityUser(user.getUsername(), user.getPassword(),authorityList);

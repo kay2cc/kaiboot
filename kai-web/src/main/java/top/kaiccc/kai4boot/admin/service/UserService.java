@@ -4,12 +4,20 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.kaiccc.kai4boot.admin.entity.User;
 import top.kaiccc.kai4boot.admin.repository.UserRepository;
 import top.kaiccc.kai4boot.common.exception.RestException;
+import top.kaiccc.kai4boot.user.security.UserSecurityServiceImpl;
 
 /**
  * @author kaiccc
@@ -19,14 +27,34 @@ import top.kaiccc.kai4boot.common.exception.RestException;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final UserSecurityServiceImpl securityService;
+    private final AuthenticationManager authenticationManager;
     /**
      * 登录
      * @param username
      * @param password
      *
      */
-    public void login(String username, String password){
+    public String login(String username, String password){
 
+        try {
+            Authentication authentication = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(username, password));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+        } catch (DisabledException | BadCredentialsException e) {
+            throw new RestException(StrUtil.format("用户认证失败: {}", e), e);
+        }
+
+        String token = "";
+        // jwt 返回
+        UserDetails userDetails = securityService.loadUserByUsername(username);
+
+        log.info(userDetails.toString());
+        return token;
+        //final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        //final String token = jwtTokenUtil.generateToken(userDetails);
+        //return token;
     }
 
     @Transactional(rollbackFor=Exception.class)
@@ -69,7 +97,9 @@ public class UserService {
     }
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserSecurityServiceImpl securityService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.securityService = securityService;
+        this.authenticationManager = authenticationManager;
     }
 }

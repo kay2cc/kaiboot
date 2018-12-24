@@ -6,7 +6,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/kai4boot.log</File>
         <encoder>
-            <pattern>%date [%level] [%thread] %logger{60} [%file:%line] %msg%n</pattern>
+            <pattern>%date [%level] [%thread] %logger{60} [%file:%line] %msg</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/kai4boot.%d{yyyy-MM-dd}.zip</fileNamePattern>

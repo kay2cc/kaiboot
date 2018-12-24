@@ -27,13 +27,14 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-
     @PostMapping("/login")
     @ApiOperation(value = "登录", notes = "登录")
-    public RestResponse login(@RequestBody UserDto userDto){
-        log.info(userDto.toString());
-        return RestResponse.success(userDto);
+    public RestResponse login(@RequestParam("username") String name,
+                              @RequestParam("password") String password){
+        userService.login(name, password);
+        return RestResponse.success();
     }
+
 
     @GetMapping("/{id}")
     @ApiOperation(value = "通过id获取", notes = "通过id获取")
