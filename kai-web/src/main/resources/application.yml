@@ -67,6 +67,11 @@ logging:
     top.kaiccc.kai4boot: debug
   path: logs/
   file: kai4boot.log
+jwt:
+  header: kai-authorization
+  #expiration: 3600000
+  expiration: 300000
+  key: vhiwmRkMIFmZ1Q8WcS8T2Ql2DXEDYeEn
 
 wx:
   miniapp:

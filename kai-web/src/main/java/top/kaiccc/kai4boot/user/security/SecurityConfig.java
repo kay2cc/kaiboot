@@ -25,11 +25,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserSecurityServiceImpl securityService;
     private final JwtAuthenticationFilter authenticationFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    public SecurityConfig(UserSecurityServiceImpl securityService, JwtAuthenticationFilter authenticationFilter) {
+    public SecurityConfig(UserSecurityServiceImpl securityService,
+                          JwtAuthenticationFilter authenticationFilter,
+                          JwtAuthenticationEntryPoint authenticationEntryPoint) {
         this.securityService = securityService;
         this.authenticationFilter = authenticationFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Override
@@ -60,17 +64,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 添加JWT filter
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // 异常统一处理
-        http.exceptionHandling().authenticationEntryPoint(getAuthenticationEntryPoint());
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public JwtAuthenticationEntryPoint getAuthenticationEntryPoint() {
-        return new JwtAuthenticationEntryPoint();
     }
 
     @Override

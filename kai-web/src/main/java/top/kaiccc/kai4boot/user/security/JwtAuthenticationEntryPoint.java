@@ -26,10 +26,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        log.error(authException.getMessage());
         response.getWriter().write(
                 new Gson().toJson(
-                        RestResponse.failed(HttpServletResponse.SC_FORBIDDEN, "用户认证失败，请登录后请求接口"
+                        RestResponse.failed(HttpServletResponse.SC_FORBIDDEN, "非法访问，请完成验证后访问系统"
         )));
     }
 

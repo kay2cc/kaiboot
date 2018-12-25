@@ -31,8 +31,7 @@ public class UserController {
     @ApiOperation(value = "登录", notes = "登录")
     public RestResponse login(@RequestParam("username") String name,
                               @RequestParam("password") String password){
-        userService.login(name, password);
-        return RestResponse.success();
+        return RestResponse.success(userService.login(name, password));
     }
 
 

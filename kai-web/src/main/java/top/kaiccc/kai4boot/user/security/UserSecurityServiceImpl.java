@@ -30,7 +30,7 @@ public class UserSecurityServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findUserByUsername(username);
+        User user = userRepository.findUserByUsername(username.toLowerCase());
         if (ObjectUtil.isNull(user)){
             throw new UsernameNotFoundException(username + " 用户不存在");
         }

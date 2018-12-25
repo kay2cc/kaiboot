@@ -5,25 +5,25 @@ import top.kaiccc.kai4boot.common.enums.CodeMessage;
 
 public class RestResponse<T> {
     private int code;
-    private String message;
-    private T content;
+    private String msg;
+    private T body;
 
     public static RestResponse<String> success() {
         return success("");
     }
 
-    public static <T> RestResponse<T> success(T content) {
-        return new RestResponse<>(CodeMessage.SUCCESS.getCode(), CodeMessage.SUCCESS.getMessage(), content);
+    public static <T> RestResponse<T> success(T body) {
+        return new RestResponse<>(CodeMessage.SUCCESS.getCode(), CodeMessage.SUCCESS.getMessage(), body);
     }
 
     public static RestResponse<String> failed(CodeMessage codeMessage) {
         return failed(codeMessage.getCode(), codeMessage.getMessage());
     }
 
-    public static RestResponse<String> failed(int code,String message) {
+    public static RestResponse<String> failed(int code,String msg) {
         RestResponse<String> resp = new RestResponse<>();
         resp.setCode(code);
-        resp.setMessage(message);
+        resp.setMsg(msg);
         return resp;
     }
 
@@ -35,26 +35,26 @@ public class RestResponse<T> {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public T getContent() {
-        return content;
+    public T getBody() {
+        return body;
     }
 
-    public void setContent(T content) {
-        this.content = content;
+    public void setBody(T body) {
+        this.body = body;
     }
 
-    public RestResponse(int code, String message, T content) {
+    public RestResponse(int code, String msg, T body) {
         this.code = code;
-        this.message = message;
-        this.content = content;
+        this.msg = msg;
+        this.body = body;
     }
 
     public RestResponse() {

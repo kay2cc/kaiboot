@@ -10,13 +10,14 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.kaiccc.kai4boot.admin.entity.User;
 import top.kaiccc.kai4boot.admin.repository.UserRepository;
 import top.kaiccc.kai4boot.common.exception.RestException;
+import top.kaiccc.kai4boot.user.security.JwtUtil;
 import top.kaiccc.kai4boot.user.security.UserSecurityServiceImpl;
 
 /**
@@ -26,9 +27,11 @@ import top.kaiccc.kai4boot.user.security.UserSecurityServiceImpl;
 @Slf4j
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final UserSecurityServiceImpl securityService;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
     /**
      * 登录
      * @param username
@@ -38,23 +41,23 @@ public class UserService {
     public String login(String username, String password){
 
         try {
-            Authentication authentication = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(username, password));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-
-        } catch (DisabledException | BadCredentialsException e) {
+        } catch (DisabledException e) {
+            log.error("用户认证失败", e);
             throw new RestException(StrUtil.format("用户认证失败: {}", e), e);
+        } catch (BadCredentialsException e){
+            log.error("用户认证失败", e);
+            throw new RestException("用户认证失败: 账号或密码错误", e);
+        } catch (UsernameNotFoundException e){
+            log.error("用户认证失败", e);
+            throw new RestException("用户认证失败: 用户不存在", e);
         }
 
-        String token = "";
         // jwt 返回
-        UserDetails userDetails = securityService.loadUserByUsername(username);
-
-        log.info(userDetails.toString());
-        return token;
-        //final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        //final String token = jwtTokenUtil.generateToken(userDetails);
-        //return token;
+        User user = this.findUserByUsername(username);
+        return jwtUtil.createJWT(user);
     }
 
     @Transactional(rollbackFor=Exception.class)
@@ -97,9 +100,12 @@ public class UserService {
     }
 
     @Autowired
-    public UserService(UserRepository userRepository, UserSecurityServiceImpl securityService, AuthenticationManager authenticationManager) {
+    public UserService(UserRepository userRepository,
+                       UserSecurityServiceImpl securityService,
+                       AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.securityService = securityService;
         this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 }

@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * 异常处理器
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年10月27日 下午10:16:19
+ * 全局异常处理器
+ *
+ * @author kaiccc
  */
 @RestControllerAdvice
 public class BaseExceptionHandler {
@@ -24,5 +22,14 @@ public class BaseExceptionHandler {
     public ResponseEntity handleException(Exception e){
         log.error(e);
         return new ResponseEntity<RestResponse>(RestResponse.failed(CodeMessage.HTTP_INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * 处理自定义异常
+     */
+    @ExceptionHandler(RestException.class)
+    public ResponseEntity handleException(RestException e){
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<RestResponse>(RestResponse.failed(e.getCode(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
