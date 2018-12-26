@@ -30,7 +30,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     sql-script-encoding: utf-8
-    #url: jdbc:h2:mem:kai4boot
+    #url: jdbc:h2:mem:kaiboot
     url: jdbc:h2:E:/h2/database
     #url: jdbc:h2:/home/www/h2/database
     username: kai
@@ -64,9 +64,9 @@ spring:
 logging:
   level:
     root: info
-    top.kaiccc.kai4boot: debug
+    top.kaiccc.kaiboot: debug
   path: logs/
-  file: kai4boot.log
+  file: kaiboot.log
 jwt:
   header: kai-authorization
   #expiration: 3600000
