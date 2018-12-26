@@ -1,24 +1,36 @@
-## kai4boot
+# KaiBoot
 
-爬虫信息推送到微信，关注最新的商品、影视信息。主要是懒得打开网站一点点找。。。
+学习SpringBoot，将一些生活小插件集成到项目中。采用技术主体为 Spring 全家桶。
 
-商品：备战双11  获取到最新的商品活动（爬的 smzdm数据）
+通用脚手架。欢迎意见！！！
 
-影视：爬的 mp4ba
 
-后续还会增加一些网站的爬虫。暂时没想好。
 
-## 使用技术
+## 安装 & 运行
 
-1. SpringBoot     https://github.com/renrenio/renren-security
-2. Mybatis-Plus   https://github.com/baomidou/mybatis-plus
-3. webmagic       https://github.com/code4craft/webmagic
-4. hutool         https://github.com/looly/hutool
+- 内置 H2 DB，可直接启动项目
+- http://localhost:9900/swagger-ui.html  swagger 接口列表
 
-## 鸣谢
-Server酱的微信推送。简单高效
+## 技术清单
 
-http://sc.ftqq.com/3.version
+- Spring Boot     https://github.com/renrenio/renren-security
+- Spring Jpa
+- Spring Security
+- HikariCP
+- Logback
+- Swagger
+- webmagic       https://github.com/code4craft/webmagic
+- hutool              https://github.com/looly/hutool
+- 微信推送          http://sc.ftqq.com/3.version  简单好用
+
+
+
+  
+
+
+
+
+
 
 
 
