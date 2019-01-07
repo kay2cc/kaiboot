@@ -3,6 +3,7 @@ package top.kaiccc.kaiboot.spider.scheduled;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.kaiccc.kaiboot.common.enums.ESpiderType;
@@ -34,10 +35,15 @@ public class SpiderJobScheduled {
     private SpiderRecordRepository recordRepository;
     @Autowired
     private SpiderPipelineService spiderPipelineService;
+    @Value("${spider.scheduled}")
+    private boolean scheduledEnabled;
 
     @Scheduled(cron = "35 0 10,17,18,19,20 * * ?")
     public void mp4BaScheduled() {
-        log.info(" mp4BaScheduled start !!!");
+        log.info(" mp4BaScheduled start !!! {}", scheduledEnabled);
+        if (scheduledEnabled){
+            return;
+        }
         SpiderConfig mp4baConfig = configRepository.findAllByTypeIs(ESpiderType.mp4ba.toString()).get(0);
 
         runSpider(mp4baConfig.getUrl(), new Mp4BaSpider(mp4baConfig));
@@ -45,7 +51,10 @@ public class SpiderJobScheduled {
 
     @Scheduled(cron = "20 5 0/1 * * ? ")
     public void smzdmScheduled() {
-        log.info(" smzdmScheduled start !!!");
+        log.info(" smzdmScheduled start !!! {}", scheduledEnabled);
+        if (scheduledEnabled){
+            return;
+        }
 
         List<SpiderConfig> smzdmConfigList = configRepository.findAllByTypeIs(ESpiderType.smzdm.toString());
 

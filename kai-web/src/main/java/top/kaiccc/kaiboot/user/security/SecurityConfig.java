@@ -48,6 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);    // 使用token 关闭session
 
+        http.headers().frameOptions().disable();        //springSecurty x-frame-options deny | H2 web 控制终端采用此方式。
+
         http.authorizeRequests()            //拦截页面
             .antMatchers(                   //静态资源 无授权访问
                     "/",
@@ -56,7 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/webjars/**",
                     "/swagger-resources/**",
                     "/v2/**",
-                    "/h2web/**/**",
+                    "/h2web/**",
+                    "/sldp",
+                    "/tb/**",
                     "/admin/user/login/**"
             ).permitAll()
             .anyRequest().authenticated();                                // 除上诉内容，全部页面都要验证

@@ -2,6 +2,7 @@ package top.kaiccc.kaiboot.sldp.scheduled;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.kaiccc.kaiboot.sldp.service.SldpService;
@@ -17,9 +18,14 @@ public class SldpOrderWxScheduled {
 
     @Autowired
     private SldpService sldpService;
+    @Value("${spider.scheduled}")
+    private boolean scheduledEnabled;
 
     @Scheduled(cron = "0 0 22,23 * * ?")
     public void orderWxScheduled() {
+        if (scheduledEnabled){
+            return;
+        }
         sldpService.orderWxScheduledPush();
     }
 
