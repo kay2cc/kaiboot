@@ -87,5 +87,14 @@ spider:
   scheduled: false
 
 file:
+  tempPath: D:\\
   taobao:
     imagePath: D:\\img
+
+cloud:
+  qiniu:
+    domain: pke2nsdwo.bkt.clouddn.com
+    prefix: kai
+    accessKey: K-PpsApkNeManR_6VaWRMcM9xxIhbQuV3KlzTQDQ
+    secretKey: nEZv0um4wJeJ89hclzPoa_XfHGKxfrazGaH3quDZ
+    bucketName: kai-test-bucket

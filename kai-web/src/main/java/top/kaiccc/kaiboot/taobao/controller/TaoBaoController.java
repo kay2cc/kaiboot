@@ -7,12 +7,16 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import top.kaiccc.kaiboot.common.utils.RestResponse;
+import top.kaiccc.kaiboot.s3.cloud.QiNiuConfig;
+import top.kaiccc.kaiboot.s3.cloud.QiniuCloudStorageService;
 import top.kaiccc.kaiboot.taobao.dto.TaoBaoDto;
 import top.kaiccc.kaiboot.taobao.repository.PicsRepository;
 import top.kaiccc.kaiboot.taobao.service.ImgDownloadThread;
+import top.kaiccc.kaiboot.taobao.service.ImgUploadThread;
 import top.kaiccc.kaiboot.taobao.service.TaoBaoService;
 
 
@@ -28,9 +32,15 @@ import top.kaiccc.kaiboot.taobao.service.TaoBaoService;
 public class TaoBaoController {
 
     @Autowired
-    public TaoBaoService taoBaoService;
+    private QiNiuConfig qiNiuConfig;
     @Autowired
-    public PicsRepository picsRepository;
+    private TaoBaoService taoBaoService;
+    @Autowired
+    private PicsRepository picsRepository;
+    @Value("${file.taobao.imagePath}")
+    public String imagePath;
+    @Value("${file.tempPath}")
+    public String tempPath;
 
     @PostMapping("/")
     @ApiOperation(value = "任务保存", notes = "任务保存")
@@ -46,6 +56,15 @@ public class TaoBaoController {
     @ApiOperation(value = "图片下载", notes = "图片下载")
     public RestResponse imgDownload(){
         ThreadUtil.execute(new ImgDownloadThread(picsRepository));
+
+        return RestResponse.success();
+    }
+
+    @GetMapping("/upload")
+    @ApiOperation(value = "文件上传任务", notes = "文件上传任务")
+    public RestResponse upload(){
+        QiniuCloudStorageService storageService = new QiniuCloudStorageService(qiNiuConfig);
+        ThreadUtil.execute(new ImgUploadThread(storageService, imagePath, tempPath));
 
         return RestResponse.success();
     }
