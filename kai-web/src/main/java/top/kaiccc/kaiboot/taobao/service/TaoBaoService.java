@@ -64,54 +64,62 @@ public class TaoBaoService {
         codeWriter.write(GSON.toJson(codeBase64));
         log.debug("解码后的code 保存成功 .json");
 
+        log.debug("一共 {} 页数据，总数据：{}", codeList.size(), codeList.size() * 20);
+        int k = 1;
         for (List<TaoBaoCodeDto> page : codeList) {
             for (TaoBaoCodeDto tb : page) {
                 if (StrUtil.isEmpty(tb.getId())) {
                     continue;
                 }
+                try {
+                    log.debug("第{}条数据开始处理", k);
 
-                String filePath = sellerRootFile + File.separator + tb.getId();
-                FileWriter writer = new FileWriter( filePath + ".json");
-                writer.write(GSON.toJson(tb));
+                    String filePath = sellerRootFile + File.separator + tb.getId();
+                    FileWriter writer = new FileWriter( filePath + ".json");
+                    writer.write(GSON.toJson(tb));
 
-                Code code = new Code();
-                code.setCodeId(tb.getId());
-                code.setTargetUrl(tb.getTargetUrl());
-                code.setTitle(tb.getTitle());
-                code.setSellerId(taoBao.getSellerId());
+                    Code code = new Code();
+                    code.setCodeId(tb.getId());
+                    code.setTargetUrl(tb.getTargetUrl());
+                    code.setTitle(tb.getTitle());
+                    code.setSellerId(taoBao.getSellerId());
 
-                taoBaoRepository.save(code);
+                    taoBaoRepository.save(code);
 
-                int i = 1;
-                for (TaoBaoCodeDto.PicsBean pics : tb.getPics()) {
-                    String fileName = StrUtil.format("{}_{}{}", tb.getId(), i, ReUtil.get(IMG_REG, pics.getPath(), 1));
+                    int i = 1;
+                    for (TaoBaoCodeDto.PicsBean pics : tb.getPics()) {
+                        String fileName = StrUtil.format("{}_{}{}", tb.getId(), i, ReUtil.get(IMG_REG, pics.getPath(), 1));
 
-                    Pics picsEntity = new Pics();
-                    picsEntity.setCodeId(code.getId());
-                    picsEntity.setFileName(fileName);
-                    picsEntity.setFilePath(sellerRootFile + File.separator + fileName);
-                    picsEntity.setPath(pics.getPath());
-                    picsEntity.setCompleted(false);
-                    picsEntity.setTitle(tb.getTitle());
+                        Pics picsEntity = new Pics();
+                        picsEntity.setCodeId(code.getId());
+                        picsEntity.setFileName(fileName);
+                        picsEntity.setFilePath(sellerRootFile + File.separator + fileName);
+                        picsEntity.setPath(pics.getPath());
+                        picsEntity.setCompleted(false);
+                        picsEntity.setTitle(tb.getTitle());
 
-                    picsRepository.save(picsEntity);
-                    i++;
-                }
-
-                if (!StrUtil.equals(tb.getCommentCount(), "0")
-                    && ObjectUtil.isNotNull(tb.getIsTop())
-                    && ObjectUtil.isNotNull(tb.getIsTop().getList())) {
-
-                    for (TaoBaoCommentDto.ListBean list : tb.getIsTop().getList()) {
-                        Comment comment = new Comment();
-                        comment.setCodeId(code.getId());
-                        comment.setCommenterNick(list.getCommenterNick());
-                        comment.setContent(list.getContent());
-                        commentRepository.save(comment);
+                        picsRepository.save(picsEntity);
+                        i++;
                     }
+
+                    if (!StrUtil.equals(tb.getCommentCount(), "0")
+                            && ObjectUtil.isNotNull(tb.getIsTop())
+                            && ObjectUtil.isNotNull(tb.getIsTop().getList())) {
+
+                        for (TaoBaoCommentDto.ListBean list : tb.getIsTop().getList()) {
+                            Comment comment = new Comment();
+                            comment.setCodeId(code.getId());
+                            comment.setCommenterNick(list.getCommenterNick());
+                            comment.setContent(list.getContent());
+                            commentRepository.save(comment);
+                        }
+                    }
+                }catch (Exception e){
+                    log.error("保存数据失败：", e);
                 }
+                k++;
             }
         }
-        log.debug("解码后的code 保存成功 .json");
+        log.debug("TB分析数据存储完成。保存的总数据：{}", k);
     }
 }

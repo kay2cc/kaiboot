@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    sql-script-encoding: utf-8
+    url: jdbc:h2:/home/www/h2/database
+    username: kai
+    password: kaiccc
+    #schema: classpath:db/schema.sql
+    #data: classpath:db/data.sql
+
+spider:
+  scheduled: true
+
+file:
+  tempPath: /home/www/temp
+  taobao:
+    imagePath: /home/www/image

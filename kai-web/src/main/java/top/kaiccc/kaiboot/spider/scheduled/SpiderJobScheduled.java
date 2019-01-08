@@ -42,29 +42,26 @@ public class SpiderJobScheduled {
     public void mp4BaScheduled() {
         log.info(" mp4BaScheduled start !!! {}", scheduledEnabled);
         if (scheduledEnabled){
-            return;
-        }
-        SpiderConfig mp4baConfig = configRepository.findAllByTypeIs(ESpiderType.mp4ba.toString()).get(0);
+            SpiderConfig mp4baConfig = configRepository.findAllByTypeIs(ESpiderType.mp4ba.toString()).get(0);
 
-        runSpider(mp4baConfig.getUrl(), new Mp4BaSpider(mp4baConfig));
+            runSpider(mp4baConfig.getUrl(), new Mp4BaSpider(mp4baConfig));
+        }
     }
 
     @Scheduled(cron = "20 5 0/1 * * ? ")
     public void smzdmScheduled() {
         log.info(" smzdmScheduled start !!! {}", scheduledEnabled);
         if (scheduledEnabled){
-            return;
-        }
+            List<SpiderConfig> smzdmConfigList = configRepository.findAllByTypeIs(ESpiderType.smzdm.toString());
 
-        List<SpiderConfig> smzdmConfigList = configRepository.findAllByTypeIs(ESpiderType.smzdm.toString());
-
-        for (SpiderConfig config : smzdmConfigList) {
-            try {
-                runSpider(StrUtil.format(config.getUrl(),
-                        URLEncoder.encode(config.getSearchKey(), "UTF-8")),
-                        new SMZDMSpider(config));
-            } catch (UnsupportedEncodingException e) {
-                log.error(e.getMessage(), e);
+            for (SpiderConfig config : smzdmConfigList) {
+                try {
+                    runSpider(StrUtil.format(config.getUrl(),
+                            URLEncoder.encode(config.getSearchKey(), "UTF-8")),
+                            new SMZDMSpider(config));
+                } catch (UnsupportedEncodingException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
     }

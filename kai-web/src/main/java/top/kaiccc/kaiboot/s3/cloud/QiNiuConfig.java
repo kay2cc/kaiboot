@@ -1,5 +1,6 @@
 package top.kaiccc.kaiboot.s3.cloud;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
  * @author kaiccc
  * @date 2019-01-07 17:05
  */
+@Data
 @Component
 @ConfigurationProperties(prefix = "cloud.qiniu")
 public class QiNiuConfig {
@@ -31,44 +33,8 @@ public class QiNiuConfig {
      * bucket name
      */
     private String bucketName;
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public String getAccessKey() {
-        return accessKey;
-    }
-
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getBucketName() {
-        return bucketName;
-    }
-
-    public void setBucketName(String bucketName) {
-        this.bucketName = bucketName;
-    }
+    /**
+     * 临时目录
+     */
+    private String tempPath;
 }

@@ -19,6 +19,8 @@ import top.kaiccc.kaiboot.taobao.service.ImgDownloadThread;
 import top.kaiccc.kaiboot.taobao.service.ImgUploadThread;
 import top.kaiccc.kaiboot.taobao.service.TaoBaoService;
 
+import java.io.IOException;
+
 
 /**
  * Taobao Controller
@@ -63,9 +65,9 @@ public class TaoBaoController {
 
     @GetMapping("/upload")
     @ApiOperation(value = "文件上传任务", notes = "文件上传任务")
-    public RestResponse upload(){
-        QiniuCloudStorageService storageService = new QiniuCloudStorageService(qiNiuConfig);
-        ThreadUtil.execute(new ImgUploadThread(storageService, imagePath, tempPath));
+    public RestResponse upload(@RequestParam(value = "zipPath", required = false) String zipPath) throws IOException {
+        QiniuCloudStorageService storageService = new QiniuCloudStorageService(qiNiuConfig, true);
+        ThreadUtil.execute(new ImgUploadThread(storageService, imagePath, tempPath, zipPath));
 
         return RestResponse.success();
     }

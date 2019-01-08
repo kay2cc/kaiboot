@@ -58,7 +58,7 @@ public class ImgDownloadThread extends Thread {
 
                 @Override
                 public void finish() {
-                    log.info("下载完成 >>> {} {}", title);
+                    log.info("下载完成 >>> {} {}", id, title);
                 }
             });
         }catch (Exception e){

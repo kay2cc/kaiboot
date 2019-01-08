@@ -4,6 +4,8 @@ server:
       context-path: /
 
 spring:
+  profiles:
+    active: prod  #prod
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
@@ -26,25 +28,6 @@ spring:
         max-wait: -1ms    # 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-idle: 10      # 连接池中的最大空闲连接
         min-idle: 5       # 连接池中的最小空闲连接
-
-  datasource:
-    driver-class-name: org.h2.Driver
-    sql-script-encoding: utf-8
-    #url: jdbc:h2:mem:kaiboot
-    #url: jdbc:h2:E:/h2/database
-    url: jdbc:h2:/home/www/h2/database
-    username: kai
-    password: kaiccc
-    #schema: classpath:db/schema.sql
-    #data: classpath:db/data.sql
-
-    hikari:
-      idle-timeout: 180000      # 空闲连接存活最大时间，默认600000（10分钟）
-      maxLifetime: 1800000
-      auto-commit: true         # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
-      connection-timeout: 30000 # 数据库连接超时时间,默认30秒
-      connection-test-query: SELECT 1
-
   h2:
     console:
       path: /h2web
@@ -83,14 +66,6 @@ wx:
         msgDataFormat: JSON
   test-sendkey: 6496-4c4fa63accad466079b7f46315be1c50
   sldp-sendkey: 6081-920770083f6d9c16a3ecd21cdd08c597
-spider:
-  #scheduled: false
-  scheduled: true
-
-file:
-  tempPath: /home/www
-  taobao:
-    imagePath: /home/www/image
 
 cloud:
   qiniu:
@@ -98,4 +73,5 @@ cloud:
     prefix: kai
     accessKey: K-PpsApkNeManR_6VaWRMcM9xxIhbQuV3KlzTQDQ
     secretKey: nEZv0um4wJeJ89hclzPoa_XfHGKxfrazGaH3quDZ
-    bucketName: kai-test-bucket
+    bucketName: kai-bj-bucket
+    temp-path: ${file.tempPath}
