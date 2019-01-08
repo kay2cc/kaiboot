@@ -112,7 +112,7 @@ public class SldpService {
         HttpResponse orderResponse = HttpRequest.get(url).execute();
 
         OrderListDto orderListDto = new Gson().fromJson(orderResponse.body(), OrderListDto.class);
-        log.debug(orderResponse.toString());
+
         if (ObjectUtil.isNull(orderListDto) || orderListDto.getCode() != 0){
             throw new Exception("查询失败");
         }

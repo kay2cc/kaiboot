@@ -45,6 +45,7 @@ public class TaoBaoController {
     @PostMapping("/")
     @ApiOperation(value = "任务保存", notes = "任务保存")
     public RestResponse save (@RequestBody String taoBao){
+        log.debug("Taobao 接收到任务");
         TaoBaoDto taoBaoDto = new Gson().fromJson(taoBao, new TypeToken<TaoBaoDto>() {
         }.getType());
 

@@ -168,26 +168,15 @@
             <version>${qiniu.version}</version>
         </dependency>
 
+<!--
         <dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>${aliyun.oss.version}</version>
         </dependency>
+-->
 
     </dependencies>
-
-	<build>
-		<finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
-            </plugin>
-        </plugins>
-	</build>
 
 	<repositories>
 		<repository>

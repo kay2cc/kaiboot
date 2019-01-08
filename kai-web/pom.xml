@@ -29,10 +29,14 @@
 
     <build>
         <finalName>kaiboot</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
             </plugin>
             <!-- 跳过单元测试 -->
             <plugin>

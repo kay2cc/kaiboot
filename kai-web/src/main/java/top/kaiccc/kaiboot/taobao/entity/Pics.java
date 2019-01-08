@@ -45,5 +45,6 @@ public class Pics {
     /**
      * 标题
      */
+    @Column(length = 2000)
     private String title;
 }

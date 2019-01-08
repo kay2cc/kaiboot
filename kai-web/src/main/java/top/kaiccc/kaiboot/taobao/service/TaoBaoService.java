@@ -49,17 +49,20 @@ public class TaoBaoService {
 
         // code 内容保存本地文件
         File sellerRootFile = FileUtil.mkdir(imagePath + File.separator + taoBao.getSellerName());
-        String sellerCodeFile = sellerRootFile.getPath() + File.separator + taoBao.getSellerName() + ".json";
+        String sellerCodeFile = sellerRootFile.getPath() + File.separator + taoBao.getSellerName();
         log.info(sellerCodeFile);
 
+        FileWriter baseWriter = new FileWriter( sellerCodeFile + "_base.json");
+        baseWriter.write(taoBao.getCode());
+        log.debug("原始code 保存成功 base.json");
         String codeBase64 = Base64.decodeStr(taoBao.getCode(), "UTF-8");
-        log.info(codeBase64);
+
         List<List<TaoBaoCodeDto>> codeList = GSON.fromJson(codeBase64, new TypeToken<List<List<TaoBaoCodeDto>>>() {
         }.getType());
 
-        FileWriter codeWriter = new FileWriter( sellerCodeFile);
+        FileWriter codeWriter = new FileWriter( sellerCodeFile + ".json");
         codeWriter.write(GSON.toJson(codeBase64));
-
+        log.debug("解码后的code 保存成功 .json");
 
         for (List<TaoBaoCodeDto> page : codeList) {
             for (TaoBaoCodeDto tb : page) {
@@ -109,5 +112,6 @@ public class TaoBaoService {
                 }
             }
         }
+        log.debug("解码后的code 保存成功 .json");
     }
 }

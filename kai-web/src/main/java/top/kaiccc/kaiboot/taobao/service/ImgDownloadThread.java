@@ -35,6 +35,7 @@ public class ImgDownloadThread extends Thread {
             log.info("图片总数：{}，已下载：{}", picsList.size(), count);
             count++;
         }
+        log.info("ImgDownloadThread end ");
     }
 
     /**

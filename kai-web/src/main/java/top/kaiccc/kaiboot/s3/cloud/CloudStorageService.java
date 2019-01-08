@@ -17,7 +17,7 @@
 package top.kaiccc.kaiboot.s3.cloud;
 
 import cn.hutool.core.date.DateUtil;
-import org.apache.commons.lang.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -40,7 +40,7 @@ public abstract class CloudStorageService {
         //文件路径
         String path = DateUtil.format(new Date(), "yyyyMMdd") + "/" + uuid;
 
-        if(StringUtils.isNotBlank(prefix)){
+        if(StrUtil.isNotBlank(prefix)){
             path = prefix + "/" + path;
         }
 

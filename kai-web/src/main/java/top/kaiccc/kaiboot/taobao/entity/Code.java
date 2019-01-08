@@ -24,6 +24,7 @@ public class Code {
     /**
      * 标题
      */
+    @Column(length = 2000)
     private String title;
     /**
      * 宝贝链接

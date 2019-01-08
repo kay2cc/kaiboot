@@ -31,8 +31,8 @@ spring:
     driver-class-name: org.h2.Driver
     sql-script-encoding: utf-8
     #url: jdbc:h2:mem:kaiboot
-    url: jdbc:h2:E:/h2/database
-    #url: jdbc:h2:/home/www/h2/database
+    #url: jdbc:h2:E:/h2/database
+    url: jdbc:h2:/home/www/h2/database
     username: kai
     password: kaiccc
     #schema: classpath:db/schema.sql
@@ -84,12 +84,13 @@ wx:
   test-sendkey: 6496-4c4fa63accad466079b7f46315be1c50
   sldp-sendkey: 6081-920770083f6d9c16a3ecd21cdd08c597
 spider:
-  scheduled: false
+  #scheduled: false
+  scheduled: true
 
 file:
-  tempPath: D:\\
+  tempPath: /home/www
   taobao:
-    imagePath: D:\\img
+    imagePath: /home/www/image
 
 cloud:
   qiniu:
