@@ -1,7 +1,8 @@
 package top.kaiccc.kaiboot.common.license;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -14,19 +15,19 @@ import java.util.Scanner;
 
 public class LicenseUtils {
     private static final Log log = LogFactory.get();
-    private static final String privateKey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJabz2+WjJtiNbmbZUstCJa4lb+3jKW83514l334oOHxGUBKemnK3+qV8jOE56N6c7pPvqt1e23u5GC3DjlHIsGWWsz4dTsTFp9aVzRcSokeFFjOO9N7+ZdXa0+lLDndeAU3PPTyAuxwyNe4ke5UA0ukv9fPWqDg6vV9QZP/sA2BAgMBAAECgYAHWNB0tBZl2hOe20rEsQyzNYvwj0aoKx+JcgGJ3qAShY1iyn9QO9pSekAXbUtTeTy+APffK1r7EOVJJoTmHGdAkKqYxti3/Dy+6xNlOa01uFOIS4dp302F8/85hy41cfzntD+1I5Sx0pZjRSp+cbL303XZV0s45p0GkrDXY9fk9QJBAPZ10q/1pIKoyKgqHRRDFiztQ5Tqzwn/f7FREDYIQbzpocC8ya6btZ1j3eH82tGOFyO4K8k0eeoPkAkqXlJps98CQQCccDFW30qTktIlYQkaMPnn1//CRKdXMz7YDh1KKrm7ojEVVi2493oldFybQ/3LNotZ5jdsXBtyVrJtpsceUWqfAkAC5Ut+acJvDpCc+TGyRT+Dc54xp7ibA3d6m9s2503ubEhMPWuZM5ckrEG1IAVqJOM8tjM9f/JWv6wPj4HgMgG9AkAQclMdmPgUL7lcKKl2UXPUhgbje6hEKKUQvdsicv931INohNjlu07iJSufPzStapyX5PYqtDxGdwrnMEN60oBtAkAb5EqsTo9VBs6iTBrHRutZjvw6Zc+dg9/25zSesuqXmZkYCaruTrkcUyxXTlPE1UtwpWBTDb+WwNk+lEtPHe/B";
-    private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOdV+bzgLozsBrOGPHSq/T+SMQd5M3HjYTQGlTflje2C9bxC2MBFDCOSkgn4AYzfTAv0suf2KOBfahZdtY4IKflK+YRwJILrYIrxdgobknzMrw7a8CskGKUG0hzA7OiabiCXchdOElMWNHjwAACtEgpT89wqSacTUqNgln0dw86wIDAQAB";
+    private static final String privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALKRMiLgqxU6BSN74talKDp6hXjZ5msspG4eROlVrhPmxupk+1tLYG6RWc6ky/4edjrxEvteZFvA62NVMn3uLxkjpxKB0c5ruK20I45gNds2gmVEFrmRGfwbKLNxvuO+ahIGoeZ1WsK6zyU6QiFADLjPCpbiHcZMVhyqNOY/wl9JAgMBAAECgYAk9oVITvVbGX2C0NwtzlY7dK04TPKzcLRAzyc4nbHBEN5QGsMlLL8zZAcRDW/klG2o2coyGmHv1EllcHdZNfqtgeB80XKcS2UF66riPgfENa5lzLj5pT3NhEtXCyWbaDOQV8s32MMxOfj0exrrwFJTpfdFob/c2xFjqay4oD+EAQJBAPqGIX5Pxm88muWWcsQXDhPcFb6/X7df1g2dekx9GzTHgveQvPgdybL7Q7OxgU/5/wz/jRVSMuJkLPMIH7O7g8ECQQC2eGm2QxVYvNAaz7kgEGrUUyNq8gIip2oi9vzJrxwZyfNZk628SNLjx/veNjfJKQgHNKy126Rq6/We8AtBfB2JAkBvbgWrxxP+GjjTca2uZorObpAFfd23FJuDBs6FAwh821j3gJtsyOMUBwq//G4GAq5dO7WnDB6x79jGaJChQwCBAkEAnxucQht4r6nkZJygtj7aiE3+YjCogAMvX1Gy10Jj5HDeS0ukgLuXeJtXGkp4lmW65F2gA+uEEN+zi2WQywco0QJBAOq0wLalz7e9PBpel484AGglEqmhPrkeFpDlTyyTxbpUobewLNHodVeCPTj4usBbvLVj+4QMzNv6XYbTH8YJ2w4=";
+    private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCykTIi4KsVOgUje+LWpSg6eoV42eZrLKRuHkTpVa4T5sbqZPtbS2BukVnOpMv+HnY68RL7XmRbwOtjVTJ97i8ZI6cSgdHOa7ittCOOYDXbNoJlRBa5kRn8Gyizcb7jvmoSBqHmdVrCus8lOkIhQAy4zwqW4h3GTFYcqjTmP8JfSQIDAQAB";
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String cpuCode = getCPUCode();
         String baseboardCode = getBaseboard();
-        String hostInfo = Base64.encode(getHostInfo());
+        //String hostInfo = Base64.encode(getHostInfo());
 
-        String license = StrUtil.format("{}+{}+{}+{}", cpuCode, baseboardCode, System.currentTimeMillis(), hostInfo);
+        String license = StrUtil.format("{}+{}+{}", cpuCode, baseboardCode, System.currentTimeMillis());
 
         log.info("cpu: {}, baseboard: {}", cpuCode, baseboardCode);
-        log.info(hostInfo);
+
         log.info(license);
 
         /**
@@ -37,16 +38,16 @@ public class LicenseUtils {
          * base64(cpu + 激活码4-10位 + baseboardCode) 转 md5
          */
 
-        RSA publicRea = new RSA(null, publicKey);
+        RSA publicRsa = new RSA(null, publicKey);
 
-        //获得私钥
-       /* String privateKey = rsa.getPrivateKeyBase64();
-        log.info(privateKey);*/
+/*        //获得私钥
+        String privateKey = rsa.getPrivateKeyBase64();
+        log.info(privateKey);
         //获取公钥
-//       String publicKey = rsa.getPublicKeyBase64();
-//        log.info("publicKey: {}", publicKey);
+        String publicKey = rsa.getPublicKeyBase64();
+        log.info("publicKey: {}", publicKey);*/
 
-        String encryptStr = publicRea.encryptBase64(license, CharsetUtil.CHARSET_UTF_8, KeyType.PublicKey);
+        String encryptStr = publicRsa.encryptBase64(license, CharsetUtil.CHARSET_UTF_8, KeyType.PublicKey);
         log.info(encryptStr);
 
         RSA rsa = new RSA(privateKey, null);
@@ -55,15 +56,52 @@ public class LicenseUtils {
         log.info(new String(decrypt));
 
 
+        String salt = "HFSZUUGCVRAY";
+        /**
+         * 激活码
+         */
+        String random =  RandomUtil.randomString(4);
+        String hostMd5 = StrUtil.format("{}+{}+{}", cpuCode, random, baseboardCode);
+        log.info(hostMd5);
+
+        String hexCode = HexUtil.encodeHexStr(cpuCode);
+        String code = hexCode.substring(0,4) + random + hexCode.substring(6,10) + hexCode.substring(hexCode.length()-4);
+
+        log.info(HexUtil.encodeHexStr(cpuCode));
+
+        log.info(code);
+
+
+
+        //ZipUtil.unGzip();
+
+
+        /*String decEnc = aes.decrypt(aesEnc);
+        log.info(decEnc);
+*/
+    }
+    public static String bytesToHexString(byte[] bArray) {
+        StringBuffer sb = new StringBuffer(bArray.length);
+        String sTemp;
+        for (int i = 0; i < bArray.length; i++) {
+            sTemp = Integer.toHexString(0xFF & bArray[i]);
+            if (sTemp.length() < 2){
+                sb.append(0);
+            }
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
     }
 
-    public static String getHostInfo(){
+
+    public static String getHostInfo() {
         String osName = SystemUtil.getOsInfo().getName();
         String hostName = SystemUtil.getHostInfo().getName();
         String ip = SystemUtil.getHostInfo().getAddress();
 
         return StrUtil.format("{},{},{}", osName, ip, hostName);
     }
+
     /**
      * CPU序列号
      *
