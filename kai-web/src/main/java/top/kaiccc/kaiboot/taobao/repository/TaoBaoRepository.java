@@ -8,5 +8,5 @@ import top.kaiccc.kaiboot.taobao.entity.Code;
  * @date 2018-11-02 12:29
  */
 public interface TaoBaoRepository extends CrudRepository<Code, String> {
-
+    int countBySellerId(String sellerId);
 }

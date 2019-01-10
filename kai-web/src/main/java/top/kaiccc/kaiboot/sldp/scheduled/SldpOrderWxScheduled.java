@@ -24,9 +24,8 @@ public class SldpOrderWxScheduled {
     @Scheduled(cron = "0 0 22,23 * * ?")
     public void orderWxScheduled() {
         if (scheduledEnabled){
-            return;
+            sldpService.orderWxScheduledPush();
         }
-        sldpService.orderWxScheduledPush();
     }
 
 }

@@ -47,6 +47,10 @@ public class TaoBaoService {
 
     public void save(TaoBaoDto taoBao){
 
+        if (taoBaoRepository.countBySellerId(taoBao.getSellerId()) > 0){
+            log.info("此店铺已经收集过了, {} {}", taoBao.getSellerId(), taoBao.getSellerName());
+            return;
+        }
         // code 内容保存本地文件
         File sellerRootFile = FileUtil.mkdir(imagePath + File.separator + taoBao.getSellerName());
         String sellerCodeFile = sellerRootFile.getPath() + File.separator + taoBao.getSellerName();
