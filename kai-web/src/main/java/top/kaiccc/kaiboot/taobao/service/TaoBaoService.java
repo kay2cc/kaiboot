@@ -83,6 +83,7 @@ public class TaoBaoService {
                     writer.write(GSON.toJson(tb));
 
                     Code code = new Code();
+                    code.setSellerName(taoBao.getSellerName());
                     code.setCodeId(tb.getId());
                     code.setTargetUrl(tb.getTargetUrl());
                     code.setTitle(tb.getTitle());
@@ -126,4 +127,7 @@ public class TaoBaoService {
         }
         log.debug("TB分析数据存储完成。保存的总数据：{}", k);
     }
+
+
+
 }

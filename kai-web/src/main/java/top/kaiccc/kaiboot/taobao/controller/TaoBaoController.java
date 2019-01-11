@@ -71,4 +71,5 @@ public class TaoBaoController {
 
         return RestResponse.success();
     }
+
 }

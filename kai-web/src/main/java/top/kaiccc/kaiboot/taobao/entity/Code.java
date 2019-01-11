@@ -20,6 +20,9 @@ public class Code {
     @Column(name = "id", length = 36)
     private String id;
 
+    /**
+     * 秀-业务记录ID
+     */
     private String codeId;
     /**
      * 标题
@@ -35,5 +38,10 @@ public class Code {
      * 店铺id
      */
     private String sellerId;
+
+    /**
+     * 店铺名称
+     */
+    private String sellerName;
 
 }

@@ -61,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/h2web/**",
                     "/sldp",
                     "/tb/**",
+                    "/admin//backup",
                     "/admin/user/login/**"
             ).permitAll()
             .anyRequest().authenticated();                                // 除上诉内容，全部页面都要验证
