@@ -1,19 +1,3 @@
-/**
- * Copyright 2018 人人开源 http://www.renren.io
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package top.kaiccc.kaiboot.s3.cloud;
 
 import com.google.gson.Gson;
@@ -40,14 +24,14 @@ import java.io.InputStream;
  * @date 2017-03-25 15:41
  */
 @Slf4j
-public class QiniuCloudStorageService extends CloudStorageService {
+public class QiNiuCloudStorageService extends CloudStorageService {
     private QiNiuConfig config;
 
     private UploadManager uploadManager;
     private String token;
     private boolean isRbu;
 
-    public QiniuCloudStorageService(QiNiuConfig config, boolean isRbu) throws IOException {
+    public QiNiuCloudStorageService(QiNiuConfig config, boolean isRbu) throws IOException {
         this.config = config;
         this.isRbu = isRbu;
         init();
@@ -55,16 +39,19 @@ public class QiniuCloudStorageService extends CloudStorageService {
 
     private void init() throws IOException {
         Configuration cfg = new Configuration(Zone.zone1());
+        // 超时单位 秒
+        long expires = 3600;
         if (isRbu){
             //设置断点续传文件进度保存目录
             FileRecorder fileRecorder = new FileRecorder(config.getTempPath() + File.separator + config.getBucketName());
             uploadManager = new UploadManager(cfg, fileRecorder);
+            expires = 3600 * 24;
         }else {
             uploadManager = new UploadManager(cfg);
         }
 
         token = Auth.create(config.getAccessKey(), config.getSecretKey()).
-                uploadToken(config.getBucketName());
+                uploadToken(config.getBucketName(), null, expires, null);
     }
 
     @Override
@@ -87,6 +74,7 @@ public class QiniuCloudStorageService extends CloudStorageService {
             log.debug("RBU Start {}", filePath);
 
             Response response = uploadManager.put(filePath, path, token);
+
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             log.debug("上传成功 结果返回 {}, {}", putRet.key, putRet.hash);

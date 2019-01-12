@@ -7,7 +7,7 @@ public class LicenseUtils {
     private static final Log log = LogFactory.get();
 
 
-    public static void main(String[] args) throws Exception {
+/*    public static void main(String[] args) throws Exception {
         License license = new License();
         String hostCode = license.generate();
         log.info("host: "+ hostCode);
@@ -17,7 +17,7 @@ public class LicenseUtils {
 
         log.info("{}", license.activation(licStr));
 
-    }
+    }*/
 
 
 

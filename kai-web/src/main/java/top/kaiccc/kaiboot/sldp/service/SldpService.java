@@ -48,7 +48,7 @@ public class SldpService {
      * 订单信息 微信推送
      */
     public void orderWxScheduledPush(){
-        log.info("orderWxScheduledPush start !");
+        log.info("SLDP orderWxScheduledPush start !");
         /*
          * 昨天
          */
