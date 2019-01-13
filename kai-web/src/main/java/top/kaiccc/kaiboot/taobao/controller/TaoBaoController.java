@@ -51,7 +51,7 @@ public class TaoBaoController {
     public String imagePath;
     @Value("${file.tempPath}")
     public String tempPath;
-    @Value("${wx.test-sendkey}}")
+    @Value("${wx.test-sendkey}")
     public String sendkey;
 
     @PostMapping("/")
@@ -85,7 +85,7 @@ public class TaoBaoController {
     @ApiOperation(value = "文件上传进度", notes = "文件上传进度")
     public RestResponse progress() {
         String msg = "没发现上传文件";
-        File[] tempList = FileUtil.ls(tempPath);
+        File[] tempList = FileUtil.ls(tempPath + File.separator + qiNiuConfig.getBucketName());
 
         for (File temp : tempList){
             if (FileUtil.isModifed(temp, System.currentTimeMillis() - 1000 * 60 * 10)){
