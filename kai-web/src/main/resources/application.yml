@@ -69,9 +69,9 @@ wx:
 
 cloud:
   qiniu:
-    domain: pke2nsdwo.bkt.clouddn.com
-    prefix: kai
-    accessKey: K-PpsApkNeManR_6VaWRMcM9xxIhbQuV3KlzTQDQ
-    secretKey: nEZv0um4wJeJ89hclzPoa_XfHGKxfrazGaH3quDZ
-    bucketName: kai-bj-bucket
+    domain:
+    prefix:
+    accessKey:
+    secretKey:
+    bucketName:
     temp-path: ${file.tempPath}

@@ -53,15 +53,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()            //拦截页面
             .antMatchers(                   //静态资源 无授权访问
                     "/",
+                    // 静态目录
                     "/static/**",
+                    "/file/**",
+                    // swagger
+                    "/swagger-resources/**",
                     "/swagger-ui.html",
                     "/webjars/**",
-                    "/swagger-resources/**",
                     "/v2/**",
+                    // h2
                     "/h2web/**",
+                    // url
                     "/sldp",
                     "/tb/**",
-                    "/admin//backup",
                     "/admin/user/login/**"
             ).permitAll()
             .anyRequest().authenticated();                                // 除上诉内容，全部页面都要验证

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import top.kaiccc.kaiboot.common.exception.RestException;
 import top.kaiccc.kaiboot.taobao.dto.TaoBaoCodeDto;
 import top.kaiccc.kaiboot.taobao.dto.TaoBaoCommentDto;
 import top.kaiccc.kaiboot.taobao.dto.TaoBaoDto;
@@ -49,7 +50,7 @@ public class TaoBaoService {
 
         if (taoBaoRepository.countBySellerId(taoBao.getSellerId()) > 0){
             log.info("此店铺已经收集过了, {} {}", taoBao.getSellerId(), taoBao.getSellerName());
-            return;
+            throw new RestException(StrUtil.format("此店铺已经收集过了, {} {}", taoBao.getSellerId(), taoBao.getSellerName()));
         }
         // code 内容保存本地文件
         File sellerRootFile = FileUtil.mkdir(imagePath + File.separator + taoBao.getSellerName());

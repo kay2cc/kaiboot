@@ -17,17 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import top.kaiccc.kaiboot.common.utils.RestResponse;
 import top.kaiccc.kaiboot.common.utils.StorageUnitUtils;
 import top.kaiccc.kaiboot.common.utils.WxMsgUtils;
-import top.kaiccc.kaiboot.s3.cloud.QiNiuCloudStorageService;
 import top.kaiccc.kaiboot.s3.cloud.QiNiuConfig;
 import top.kaiccc.kaiboot.s3.dto.QiNiuProgressDto;
 import top.kaiccc.kaiboot.taobao.dto.TaoBaoDto;
 import top.kaiccc.kaiboot.taobao.repository.PicsRepository;
 import top.kaiccc.kaiboot.taobao.service.ImgDownloadThread;
 import top.kaiccc.kaiboot.taobao.service.ImgUploadThread;
+import top.kaiccc.kaiboot.taobao.service.ImgZipThread;
 import top.kaiccc.kaiboot.taobao.service.TaoBaoService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -73,11 +74,25 @@ public class TaoBaoController {
         return RestResponse.success();
     }
 
+    @GetMapping("/zip")
+    @ApiOperation(value = "图片压缩zip", notes = "图片压缩zip")
+    public RestResponse imgZip() {
+        ThreadUtil.execute(new ImgZipThread(imagePath, tempPath, sendkey));
+        return RestResponse.success();
+    }
+
     @GetMapping("/upload")
-    @ApiOperation(value = "文件上传任务", notes = "文件上传任务")
+    @ApiOperation(value = "文件上传任务BaiDuYunPan", notes = "文件上传任务BaiDuYunPan")
     public RestResponse upload(@RequestParam(value = "zipPath", required = false) String zipPath) throws IOException {
-        QiNiuCloudStorageService storageService = new QiNiuCloudStorageService(qiNiuConfig, true);
-        ThreadUtil.execute(new ImgUploadThread(storageService, imagePath, tempPath, zipPath, sendkey));
+
+        if (StrUtil.isEmpty(zipPath)){
+            String zipName = StrUtil.format("{}_{}.zip",
+                    DateUtil.format(new Date(), "yyyyMMdd"),
+                    System.currentTimeMillis());
+            zipPath = tempPath + File.separator + zipName;
+        }
+
+        ThreadUtil.execute(new ImgUploadThread(imagePath, zipPath));
         return RestResponse.success();
     }
 
