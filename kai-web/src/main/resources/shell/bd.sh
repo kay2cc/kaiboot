@@ -1,7 +1,7 @@
 #!/bin/bash
 
 log_path="/home/www/file/bd.txt"
-zip_path=$1
+zip_path="/home/www/temp/$1"
 bd_cmd="nohup python -m bypy -v upload ${zip_path} >> ${log_path} 2>&1 &"
 
 ls_date=`date +%Y%m%d_%H%M`

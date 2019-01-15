@@ -23,20 +23,19 @@ public class ImgZipThread extends Thread {
     @Override
     public void run(){
         log.info("ImgZipThread start ");
-        String zipName = StrUtil.format("{}_{}.zip",
-                                        DateUtil.format(new Date(), "yyyyMMdd"),
-                                        System.currentTimeMillis());
+        String zipName = StrUtil.format("{}.zip",
+                                        DateUtil.format(new Date(), "MMdd_HHmm"));
         String zipPath = tempPath + File.separator + zipName;
 
         File zipFile = ZipUtil.zip(imgPath, zipPath);
 
         log.info("压缩完成，{}", zipFile.getPath());
 
-        WxMsgUtils.sendMessage(sendkey, "图片压缩情况",
-                StrUtil.format("### 图片压缩情况" +
-                                        "### 文件名：{}" +
-                                        "时间：{}"
-                , zipFile.getPath(), DateUtil.now()));
+        WxMsgUtils.sendMessage(sendkey, "图片压缩任务已完成",
+                StrUtil.format("### 图片压缩任务已完成 \n" +
+                                            "> 时间：{}\n" +
+                                            "> 文件名：{}  \n"
+                ,  DateUtil.now(), zipFile.getPath()));
         log.info("ImgUploadThread end {}, ZIP包位置：{}" , zipFile.getPath());
     }
 

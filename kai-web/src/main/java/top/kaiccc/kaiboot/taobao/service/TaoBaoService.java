@@ -129,6 +129,4 @@ public class TaoBaoService {
         log.debug("TB分析数据存储完成。保存的总数据：{}", k);
     }
 
-
-
 }
