@@ -36,15 +36,19 @@ public class TaoBaoService {
 
     @Value("${file.taobao.imagePath}")
     public String imagePath;
-    public static final String IMG_REG = ".+(.JPEG|.jpeg|.JPG|.jpg|.png|.PNG)$";
-    @Autowired
-    public TaoBaoRepository taoBaoRepository;
-    @Autowired
-    public PicsRepository picsRepository;
-    @Autowired
-    public CommentRepository commentRepository;
-
     private static final Gson GSON = new Gson();
+    private static final String IMG_REG = ".+(.JPEG|.jpeg|.JPG|.jpg|.png|.PNG)$";
+
+    private final TaoBaoRepository taoBaoRepository;
+    private final PicsRepository picsRepository;
+    private final CommentRepository commentRepository;
+
+    @Autowired
+    public TaoBaoService(TaoBaoRepository taoBaoRepository, PicsRepository picsRepository, CommentRepository commentRepository) {
+        this.taoBaoRepository = taoBaoRepository;
+        this.picsRepository = picsRepository;
+        this.commentRepository = commentRepository;
+    }
 
     public void save(TaoBaoDto taoBao){
 
@@ -129,4 +133,7 @@ public class TaoBaoService {
         log.debug("TB分析数据存储完成。保存的总数据：{}", k);
     }
 
+    public int countBySellerId(String sellerId){
+        return taoBaoRepository.countBySellerId(sellerId);
+    }
 }

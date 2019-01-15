@@ -51,6 +51,12 @@ public class TaoBaoController {
         return RestResponse.success("收到任务");
     }
 
+    @GetMapping("/{sellerId}")
+    @ApiOperation(value = "通过店铺id查询是否存在", notes = "通过店铺id查询是否存在")
+    public RestResponse findSellerIdExist(@PathVariable String sellerId){
+        return RestResponse.success(taoBaoService.countBySellerId(sellerId) == 0);
+    }
+
     @GetMapping("/img")
     @ApiOperation(value = "图片下载", notes = "图片下载")
     public RestResponse imgDownload(){
