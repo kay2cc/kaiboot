@@ -42,7 +42,7 @@ public class SldpService {
     private static final String CAPTCHA_URL = "http://www.sanlingdp.com/site/captcha";
 
     private static final String LOGIN_URL = "http://www.sanlingdp.com/admin-read/login";
-    private static final String ORDER_URL = "http://www.sanlingdp.com/order-read/list?page=1&keyword=&page_size=20&status=-1&payment_status=-1&payment_type=-1&order_type=-1&category_type_id=-1&is_receipt=-1&deliver_shop_id=-1&start_date=&end_date=&pay_start_date={}&pay_end_date={}&province_id=23&city_id=-1&district_id=-1&map=1";
+    private static final String ORDER_URL = "http://www.sanlingdp.com/order-read/list?page=1&keyword=&page_size=20&status=2&payment_status=-1&payment_type=-1&order_type=-1&category_type_id=-1&is_receipt=-1&deliver_shop_id=-1&start_date=&end_date=&pay_start_date={}&pay_end_date={}&province_id=23&city_id=-1&district_id=-1&map=1";
 
     /**
      * 订单信息 微信推送
