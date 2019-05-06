@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.kaiccc.kaiboot.common.enums.ESpiderType;
 import top.kaiccc.kaiboot.spider.entity.SpiderConfig;
-import top.kaiccc.kaiboot.spider.job.Mp4BaSpider;
 import top.kaiccc.kaiboot.spider.job.SMZDMSpider;
 import top.kaiccc.kaiboot.spider.repository.SpiderConfigRepository;
 import top.kaiccc.kaiboot.spider.repository.SpiderRecordRepository;
@@ -37,16 +36,6 @@ public class SpiderJobScheduled {
     private SpiderPipelineService spiderPipelineService;
     @Value("${spider.scheduled}")
     private boolean scheduledEnabled;
-
-    @Scheduled(cron = "35 0 10,17,18,19,20 * * ?")
-    public void mp4BaScheduled() {
-        log.info(" mp4BaScheduled start !!! {}", scheduledEnabled);
-        if (scheduledEnabled){
-            SpiderConfig mp4baConfig = configRepository.findAllByTypeIs(ESpiderType.mp4ba.toString()).get(0);
-
-            runSpider(mp4baConfig.getUrl(), new Mp4BaSpider(mp4baConfig));
-        }
-    }
 
     @Scheduled(cron = "20 5 0/1 * * ? ")
     public void smzdmScheduled() {

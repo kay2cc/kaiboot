@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import top.kaiccc.kaiboot.common.utils.RuoKuaiUtils;
+import top.kaiccc.kaiboot.common.utils.OcrUtils;
 import top.kaiccc.kaiboot.common.utils.WxMsgUtils;
 import top.kaiccc.kaiboot.sldp.dto.OrderListDto;
 
@@ -70,8 +70,8 @@ public class SldpService {
             log.error("异常了兄弟：", e);
             WxMsgUtils.sendMessage(SLDP_WX_KEY,
                     "查询失败",
-                    StrUtil.format("### 查询失败，请呼叫皮皮猪\n\n ### [点击重新推送]({})",
-                    "http://api.kaiccc.top/kai4boot/sldp"));
+                    StrUtil.format("### 查询失败，请呼叫皮皮猪\n\n ### [点这尝试重新推送]({})",
+                    "http://api.kkai.top:9900/sldp"));
         }
         log.info("orderWxScheduledPush end !");
     }
@@ -82,7 +82,7 @@ public class SldpService {
     private void login() throws Exception {
         HttpResponse httpResponse = HttpRequest.get(CAPTCHA_URL).execute();
         String imgBase64 = Base64.encode(httpResponse.bodyStream());
-        String rkCaptcha = RuoKuaiUtils.ruoKuaiOCR(imgBase64);
+        String rkCaptcha = OcrUtils.ocr(imgBase64);
 
         Map<String, Object> loginForm = MapUtil.newHashMap();
         loginForm.put("user_name", "ysx");
