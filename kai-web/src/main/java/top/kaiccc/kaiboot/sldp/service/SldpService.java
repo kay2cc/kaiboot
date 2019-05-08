@@ -8,12 +8,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import top.kaiccc.kaiboot.common.utils.OcrUtils;
-import top.kaiccc.kaiboot.common.utils.WxMsgUtils;
 import top.kaiccc.kaiboot.sldp.dto.OrderListDto;
 
 import java.util.Date;
@@ -32,27 +31,23 @@ import java.util.Map;
 @Service
 @Slf4j
 public class SldpService {
-
-    @Value("${wx.sldp-sendkey}")
-    private String SLDP_WX_KEY;
-    private static final String DATE_FORMAT = "MM月dd日";
     /**
      * 30 验证码 URL
      */
+    private HttpRequest httpRequest;
     private static final String CAPTCHA_URL = "http://www.sanlingdp.com/site/captcha";
-
     private static final String LOGIN_URL = "http://www.sanlingdp.com/admin-read/login";
-    private static final String ORDER_URL = "http://www.sanlingdp.com/order-read/list?page=1&keyword=&page_size=20&status=2&payment_status=-1&payment_type=-1&order_type=-1&category_type_id=-1&is_receipt=-1&deliver_shop_id=-1&start_date=&end_date=&pay_start_date={}&pay_end_date={}&province_id=23&city_id=-1&district_id=-1&map=1";
+    private static final String ORDER_URL = "http://www.sanlingdp.com/order-read/list?page=1&keyword=&page_size=20&status=2&payment_status=-1&payment_type=-1&order_type=-1&category_type_id=-1&is_receipt=-1&deliver_shop_id=-1&start_date=&end_date=&pay_start_date={}&pay_end_date={}&province_id={}&city_id=-1&district_id=-1&map=1";
 
     /**
      * 订单信息 微信推送
      */
-    public void orderWxScheduledPush(){
-        log.info("SLDP orderWxScheduledPush start !");
+    public Map<String, OrderListDto> orderWxScheduledPush(String city){
+        log.info("SLDP orderWxScheduledPush start ! --- " + city);
+        Map<String, OrderListDto> jsonMap = Maps.newHashMap();
         /*
          * 昨天
          */
-        String yesterdayFormat = DateUtil.format(DateUtil.yesterday(), DATE_FORMAT);
         String yesterday = DateUtil.formatDate(DateUtil.yesterday());
 
         /*
@@ -61,19 +56,20 @@ public class SldpService {
         String monthStartDate = DateUtil.formatDate(DateUtil.beginOfMonth(new Date()));
         String monthEndDate = DateUtil.today();
 
-        int month = DateUtil.month(new Date()) + 1;
         try {
             this.login();
-            WxMsgUtils.sendMessage(SLDP_WX_KEY, yesterdayFormat+"-四川业绩情况统计", this.findOrderList(yesterday, yesterday, "yesterday"));
-            WxMsgUtils.sendMessage(SLDP_WX_KEY, month +"月至今-四川业绩情况统计", this.findOrderList(monthStartDate, monthEndDate, ""));
+            // 昨天
+            OrderListDto yesterOrder = this.findOrderList(yesterday, yesterday, city);
+            // 本月至今
+            OrderListDto monthOrder = this.findOrderList(monthStartDate, monthEndDate, city);
+
+            jsonMap.put("yesterOrder", yesterOrder);
+            jsonMap.put("monthOrder", monthOrder);
         } catch (Exception e) {
-            log.error("异常了兄弟：", e);
-            WxMsgUtils.sendMessage(SLDP_WX_KEY,
-                    "查询失败",
-                    StrUtil.format("### 查询失败，请呼叫皮皮猪\n\n ### [点这尝试重新推送]({})",
-                    "http://api.kkai.top:9900/sldp"));
+            log.error("出现错误，请刷新或者请呼叫皮皮猪", e);
         }
         log.info("orderWxScheduledPush end !");
+        return jsonMap;
     }
 
     /**
@@ -106,8 +102,8 @@ public class SldpService {
      * @return
      * @throws Exception
      */
-    private String findOrderList(String startDate, String endDate, String type) throws Exception {
-        String url = StrUtil.format(ORDER_URL, startDate, endDate);
+    private OrderListDto findOrderList(String startDate, String endDate, String city) throws Exception {
+        String url = StrUtil.format(ORDER_URL, startDate, endDate, city);
 
         HttpResponse orderResponse = HttpRequest.get(url).execute();
 
@@ -116,7 +112,7 @@ public class SldpService {
         if (ObjectUtil.isNull(orderListDto) || orderListDto.getCode() != 0){
             throw new Exception("查询失败");
         }
-        return this.formatWxPushMsg(orderListDto, type);
+        return orderListDto;
     }
 
     /**
@@ -144,7 +140,8 @@ public class SldpService {
                                 "- 收货地址：{} \n" +
                                 "- 联系人：{} \n",
                                 i,order.getPay_real_name(),
-                        order.getPay_real_name(), order.getTotal_fee(), order.getPayment_amount(), order.getPV(), order.getOrder_type_name(),
+                        order.getPay_real_name(),
+                        order.getTotal_fee(), order.getPayment_amount(), order.getPV(), order.getOrder_type_name(),
                         order.getOrder_no(), order.getCreate_time(), order.getPayment_time(), order.getReceipt_man(), order.getReceipt_addr(), order.getReceipt_tel());
 
                 orderMsg.append(msg);
@@ -157,7 +154,7 @@ public class SldpService {
             }
         }
         orderMsg.append(StrUtil.format("\n `发送时间：{}`", DateUtil.now()));
-
+        log.info(orderMsg.toString());
         return orderMsg.toString();
     }
 
