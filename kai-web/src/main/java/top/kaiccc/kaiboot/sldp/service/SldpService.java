@@ -12,7 +12,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import top.kaiccc.kaiboot.common.utils.OcrUtils;
+import top.kaiccc.kaiboot.common.utils.RuoKuaiUtils;
 import top.kaiccc.kaiboot.sldp.dto.OrderListDto;
 
 import java.util.Date;
@@ -78,7 +78,7 @@ public class SldpService {
     private void login() throws Exception {
         HttpResponse httpResponse = HttpRequest.get(CAPTCHA_URL).execute();
         String imgBase64 = Base64.encode(httpResponse.bodyStream());
-        String rkCaptcha = OcrUtils.ocr(imgBase64);
+        String rkCaptcha = RuoKuaiUtils.ruoKuaiOCR(imgBase64);
 
         Map<String, Object> loginForm = MapUtil.newHashMap();
         loginForm.put("user_name", "ysx");

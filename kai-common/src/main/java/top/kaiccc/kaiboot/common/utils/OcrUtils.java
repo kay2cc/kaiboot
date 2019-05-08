@@ -20,6 +20,7 @@ import java.util.Map;
 public class OcrUtils {
     private static final Log log = LogFactory.get();
     private static final String URL = "https://v2-api.jsdama.com/upload";
+//    https://www.jsdati.com/
 
     public static void main(String[] args) {
         String imgBase64 = Base64.encode(new File("D:\\captcha_2.png"));
