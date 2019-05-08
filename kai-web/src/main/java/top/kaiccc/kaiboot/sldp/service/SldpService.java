@@ -2,6 +2,7 @@ package top.kaiccc.kaiboot.sldp.service;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -12,7 +13,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import top.kaiccc.kaiboot.common.utils.RuoKuaiUtils;
+import top.kaiccc.kaiboot.common.utils.OcrUtils;
 import top.kaiccc.kaiboot.sldp.dto.OrderListDto;
 
 import java.util.Date;
@@ -31,10 +32,11 @@ import java.util.Map;
 @Service
 @Slf4j
 public class SldpService {
+    public Map<String, Object> city_map = Maps.newHashMap();
+
     /**
      * 30 验证码 URL
      */
-    private HttpRequest httpRequest;
     private static final String CAPTCHA_URL = "http://www.sanlingdp.com/site/captcha";
     private static final String LOGIN_URL = "http://www.sanlingdp.com/admin-read/login";
     private static final String ORDER_URL = "http://www.sanlingdp.com/order-read/list?page=1&keyword=&page_size=20&status=-1&payment_status=-1&payment_type=-1&order_type=-1&category_type_id=-1&is_receipt=-1&deliver_shop_id=-1&start_date=&end_date=&pay_start_date={}&pay_end_date={}&province_id={}&city_id=-1&district_id=-1&map=1";
@@ -42,9 +44,9 @@ public class SldpService {
     /**
      * 订单信息 微信推送
      */
-    public Map<String, OrderListDto> orderWxScheduledPush(String city){
+    public Map<String, Object> orderWxScheduledPush(String city) throws Exception {
         log.info("SLDP orderWxScheduledPush start ! --- " + city);
-        Map<String, OrderListDto> jsonMap = Maps.newHashMap();
+        Map<String, Object> jsonMap = Maps.newHashMap();
         /*
          * 昨天
          */
@@ -56,18 +58,14 @@ public class SldpService {
         String monthStartDate = DateUtil.formatDate(DateUtil.beginOfMonth(new Date()));
         String monthEndDate = DateUtil.today();
 
-        try {
-            this.login();
-            // 昨天
-            OrderListDto yesterOrder = this.findOrderList(yesterday, yesterday, city);
-            // 本月至今
-            OrderListDto monthOrder = this.findOrderList(monthStartDate, monthEndDate, city);
+        // 昨天
+        OrderListDto yesterOrder = this.findOrderList(yesterday, yesterday, city);
+        // 本月至今
+        OrderListDto monthOrder = this.findOrderList(monthStartDate, monthEndDate, city);
 
-            jsonMap.put("yesterOrder", yesterOrder);
-            jsonMap.put("monthOrder", monthOrder);
-        } catch (Exception e) {
-            log.error("出现错误，请刷新或者请呼叫皮皮猪", e);
-        }
+        jsonMap.put("yesterOrder", yesterOrder);
+        jsonMap.put("monthOrder", monthOrder);
+        jsonMap.put("updateTime", DateUtil.now());
         log.info("orderWxScheduledPush end !");
         return jsonMap;
     }
@@ -75,10 +73,19 @@ public class SldpService {
     /**
      * 登录
      */
-    private void login() throws Exception {
+    public boolean login() {
         HttpResponse httpResponse = HttpRequest.get(CAPTCHA_URL).execute();
         String imgBase64 = Base64.encode(httpResponse.bodyStream());
-        String rkCaptcha = RuoKuaiUtils.ruoKuaiOCR(imgBase64);
+
+        TimeInterval interval = DateUtil.timer();
+        log.info("rkCaptcha start time: " + interval.start());
+//        String rkCaptcha = RuoKuaiUtils.ruoKuaiOCR(imgBase64);
+        String rkCaptcha = OcrUtils.ocr(imgBase64);
+        log.info("rkCaptcha ent time: " + interval.intervalSecond());
+
+        if (StrUtil.isEmpty(rkCaptcha)){
+            return false;
+        }
 
         Map<String, Object> loginForm = MapUtil.newHashMap();
         loginForm.put("user_name", "ysx");
@@ -91,8 +98,9 @@ public class SldpService {
         JSONObject bodyJson = new JSONObject(loginResponse.body());
         log.info(loginResponse.toString());
         if (!"0".equals(bodyJson.getStr("code"))){
-            throw new Exception("login error");
+            return false;
         }
+        return true;
     }
 
     /**

@@ -1,5 +1,6 @@
 package top.kaiccc.kaiboot.sldp.controller;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.kaiccc.kaiboot.common.utils.RestResponse;
+import top.kaiccc.kaiboot.sldp.job.SldpOrderJob;
 import top.kaiccc.kaiboot.sldp.service.SldpService;
 
 /**
@@ -24,15 +26,20 @@ public class SldpController {
     @Autowired
     private SldpService sldpService;
 
-
     @GetMapping("")
     @ApiOperation(value = "推送订单信息", notes = "推送订单信息")
-    public RestResponse index (@RequestParam(value = "city", required = false) String city){
+    public RestResponse index (@RequestParam(value = "city", required = false) String city) {
         if (StrUtil.equals("重庆", city)){
-            city = "22";
+            return RestResponse.success(sldpService.city_map.get("22"));
         }else {
-            city = "23";
+            return RestResponse.success(sldpService.city_map.get("23"));
         }
-        return RestResponse.success(sldpService.orderWxScheduledPush(city));
+    }
+
+    @GetMapping("/sync")
+    @ApiOperation(value = "同步订单信息", notes = "同步订单信息")
+    public RestResponse sync () {
+        ThreadUtil.excAsync(new SldpOrderJob(sldpService), false);
+        return RestResponse.success();
     }
 }

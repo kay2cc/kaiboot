@@ -1,6 +1,5 @@
 package top.kaiccc.kaiboot.common.utils;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -9,7 +8,6 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -21,11 +19,6 @@ public class OcrUtils {
     private static final Log log = LogFactory.get();
     private static final String URL = "https://v2-api.jsdama.com/upload";
 //    https://www.jsdati.com/
-
-    public static void main(String[] args) {
-        String imgBase64 = Base64.encode(new File("D:\\captcha_2.png"));
-        System.out.println(OcrUtils.ocr(imgBase64));
-    }
 
     public static String ocr(String imgBase64) {
         HttpResponse response = HttpRequest.post(URL)

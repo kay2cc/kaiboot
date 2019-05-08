@@ -65,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/h2web/**",
                     // url
                     "/sldp",
+                    "/sldp/sync",
                     "/tb/**",
                     "/admin/user/login/**"
             ).permitAll()
