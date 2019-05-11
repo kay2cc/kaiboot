@@ -23,7 +23,7 @@ public class SldpOrderWxScheduled {
     @Value("${spider.scheduled}")
     private boolean scheduledEnabled;
 
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 0 22 * * ?")
     public void orderWxScheduled() {
         log.info("SldpOrderWxScheduled start !!!!");
         if (scheduledEnabled){
