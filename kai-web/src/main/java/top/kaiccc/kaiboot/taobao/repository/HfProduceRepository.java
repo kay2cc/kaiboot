@@ -8,5 +8,5 @@ import top.kaiccc.kaiboot.taobao.entity.HfProduct;
  * @date 2018-11-02 12:29
  */
 public interface HfProduceRepository extends CrudRepository<HfProduct, String> {
-    HfProduct findFirstByHfSellerIdAndCreateTimeOrderByCreateTime(String sellerId, String time);
+    HfProduct findFirstByHfSellerIdAndCreateTimeOrderByPayNumDesc(String sellerId, String time);
 }

@@ -52,9 +52,9 @@ public class TaoBaoService {
         this.hfProduceRepository = hfProduceRepository;
     }
 
-    public void save(TaoBaoDto taoBao){
+    public void save(TaoBaoDto taoBao) {
 
-        if (taoBaoRepository.countBySellerId(taoBao.getSellerId()) > 0){
+        if (taoBaoRepository.countBySellerId(taoBao.getSellerId()) > 0) {
             log.info("此店铺已经收集过了, {} {}", taoBao.getSellerId(), taoBao.getSellerName());
             throw new RestException(StrUtil.format("此店铺已经收集过了, {} {}", taoBao.getSellerId(), taoBao.getSellerName()));
         }
@@ -63,7 +63,7 @@ public class TaoBaoService {
         String sellerCodeFile = sellerRootFile.getPath() + File.separator + taoBao.getSellerName();
         log.info(sellerCodeFile);
 
-        FileWriter baseWriter = new FileWriter( sellerCodeFile + "_base.json");
+        FileWriter baseWriter = new FileWriter(sellerCodeFile + "_base.json");
         baseWriter.write(taoBao.getCode());
         log.debug("原始code 保存成功 base.json");
         String codeBase64 = Base64.decodeStr(taoBao.getCode(), "UTF-8");
@@ -71,7 +71,7 @@ public class TaoBaoService {
         List<List<TaoBaoCodeDto>> codeList = GSON.fromJson(codeBase64, new TypeToken<List<List<TaoBaoCodeDto>>>() {
         }.getType());
 
-        FileWriter codeWriter = new FileWriter( sellerCodeFile + ".json");
+        FileWriter codeWriter = new FileWriter(sellerCodeFile + ".json");
         codeWriter.write(GSON.toJson(codeBase64));
         log.debug("解码后的code 保存成功 .json");
 
@@ -86,7 +86,7 @@ public class TaoBaoService {
                     log.debug("第{}条数据开始处理", k);
 
                     String filePath = sellerRootFile + File.separator + tb.getId();
-                    FileWriter writer = new FileWriter( filePath + ".json");
+                    FileWriter writer = new FileWriter(filePath + ".json");
                     writer.write(GSON.toJson(tb));
 
                     Code code = new Code();
@@ -126,7 +126,7 @@ public class TaoBaoService {
                             commentRepository.save(comment);
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.error("保存数据失败：", e);
                 }
                 k++;
@@ -135,23 +135,22 @@ public class TaoBaoService {
         log.debug("TB分析数据存储完成。保存的总数据：{}", k);
     }
 
-    public void saveHf(String hf){
+    public void saveHf(String hf) {
         String dateTime = DateUtil.format(new Date(), "yyyyMMdd");
         HfSaveDto hfSaveDto = new Gson().fromJson(hf, new TypeToken<HfSaveDto>() {
         }.getType());
-
         HfSeller hfSeller = hfSellerRepository.findBySellerId(hfSaveDto.data.parameter);
-        if(hfSeller == null){
+        if (hfSeller == null) {
             log.error("保存失败");
             return;
         }
-        FileWriter codeWriter = new FileWriter( imagePath + File.separator +
+        FileWriter codeWriter = new FileWriter(imagePath + File.separator +
                 dateTime + File.separator +
                 hfSeller.getSellerName() + ".json");
 
         codeWriter.write(hf);
 
-        for (HfSaveDto.DataBean.ItemsArrayBean items : hfSaveDto.data.itemsArray){
+        for (HfSaveDto.DataBean.ItemsArrayBean items : hfSaveDto.data.itemsArray) {
             HfProduct product = new HfProduct();
             product.setItemId(items.item_id);
             product.setPayNum(Convert.toInt(items.sold));
@@ -162,13 +161,17 @@ public class TaoBaoService {
 
             hfProduceRepository.save(product);
         }
+
     }
 
-    public List<HfRankingDto> hfRanking(String time){
+    public List<HfRankingDto> hfRanking(String time) {
         List<HfRankingDto> rankingList = new ArrayList<>();
         Iterable<HfSeller> iterable = hfSellerRepository.findAll();
-        for (HfSeller hf : iterable){
-            HfProduct pro = hfProduceRepository.findFirstByHfSellerIdAndCreateTimeOrderByCreateTime(hf.getId(), time);
+        for (HfSeller hf : iterable) {
+            HfProduct pro = hfProduceRepository.findFirstByHfSellerIdAndCreateTimeOrderByPayNumDesc(hf.getId(), time);
+            if (pro == null){
+                continue;
+            }
             HfRankingDto ranking = HfRankingDto.newBuilder()
                     .id(hf.getId())
                     .payNum(pro.getPayNum())
@@ -185,7 +188,7 @@ public class TaoBaoService {
         return rankingList;
     }
 
-    public int countBySellerId(String sellerId){
+    public int countBySellerId(String sellerId) {
         return taoBaoRepository.countBySellerId(sellerId);
     }
 }

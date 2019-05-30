@@ -1,10 +1,13 @@
 package top.kaiccc.kaiboot.taobao.dto;
 
+import lombok.Data;
+
 /**
  * @author kk
  * @Package top.kaiccc.kaiboot.taobao.dto
  * @date 2019/5/30 16:50
  */
+@Data
 public class HfRankingDto {
     private String id;
 
@@ -60,7 +63,6 @@ public class HfRankingDto {
     public static Builder newBuilder() {
         return new Builder();
     }
-
 
     public static final class Builder {
         private String id;
