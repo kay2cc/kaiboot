@@ -1,6 +1,8 @@
 package top.kaiccc.kaiboot.taobao.service;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.util.ObjectUtil;
@@ -13,17 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import top.kaiccc.kaiboot.common.exception.RestException;
-import top.kaiccc.kaiboot.taobao.dto.TaoBaoCodeDto;
-import top.kaiccc.kaiboot.taobao.dto.TaoBaoCommentDto;
-import top.kaiccc.kaiboot.taobao.dto.TaoBaoDto;
-import top.kaiccc.kaiboot.taobao.entity.Code;
-import top.kaiccc.kaiboot.taobao.entity.Comment;
-import top.kaiccc.kaiboot.taobao.entity.Pics;
-import top.kaiccc.kaiboot.taobao.repository.CommentRepository;
-import top.kaiccc.kaiboot.taobao.repository.PicsRepository;
-import top.kaiccc.kaiboot.taobao.repository.TaoBaoRepository;
+import top.kaiccc.kaiboot.taobao.dto.*;
+import top.kaiccc.kaiboot.taobao.entity.*;
+import top.kaiccc.kaiboot.taobao.repository.*;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,12 +40,16 @@ public class TaoBaoService {
     private final TaoBaoRepository taoBaoRepository;
     private final PicsRepository picsRepository;
     private final CommentRepository commentRepository;
+    private final HfSellerRepository hfSellerRepository;
+    private final HfProduceRepository hfProduceRepository;
 
     @Autowired
-    public TaoBaoService(TaoBaoRepository taoBaoRepository, PicsRepository picsRepository, CommentRepository commentRepository) {
+    public TaoBaoService(TaoBaoRepository taoBaoRepository, PicsRepository picsRepository, CommentRepository commentRepository, HfSellerRepository hfSellerRepository, HfProduceRepository hfProduceRepository) {
         this.taoBaoRepository = taoBaoRepository;
         this.picsRepository = picsRepository;
         this.commentRepository = commentRepository;
+        this.hfSellerRepository = hfSellerRepository;
+        this.hfProduceRepository = hfProduceRepository;
     }
 
     public void save(TaoBaoDto taoBao){
@@ -131,6 +133,56 @@ public class TaoBaoService {
             }
         }
         log.debug("TB分析数据存储完成。保存的总数据：{}", k);
+    }
+
+    public void saveHf(String hf){
+        String dateTime = DateUtil.format(new Date(), "yyyyMMdd");
+        HfSaveDto hfSaveDto = new Gson().fromJson(hf, new TypeToken<HfSaveDto>() {
+        }.getType());
+
+        HfSeller hfSeller = hfSellerRepository.findBySellerId(hfSaveDto.data.parameter);
+        if(hfSeller == null){
+            log.error("保存失败");
+            return;
+        }
+        FileWriter codeWriter = new FileWriter( imagePath + File.separator +
+                dateTime + File.separator +
+                hfSeller.getSellerName() + ".json");
+
+        codeWriter.write(hf);
+
+        for (HfSaveDto.DataBean.ItemsArrayBean items : hfSaveDto.data.itemsArray){
+            HfProduct product = new HfProduct();
+            product.setItemId(items.item_id);
+            product.setPayNum(Convert.toInt(items.sold));
+            product.setTitle(items.title);
+            product.setUrl(items.auctionUrl);
+            product.setCreateTime(dateTime);
+            product.setHfSellerId(hfSeller.getId());
+
+            hfProduceRepository.save(product);
+        }
+    }
+
+    public List<HfRankingDto> hfRanking(String time){
+        List<HfRankingDto> rankingList = new ArrayList<>();
+        Iterable<HfSeller> iterable = hfSellerRepository.findAll();
+        for (HfSeller hf : iterable){
+            HfProduct pro = hfProduceRepository.findFirstByHfSellerIdAndCreateTimeOrderByCreateTime(hf.getId(), time);
+            HfRankingDto ranking = HfRankingDto.newBuilder()
+                    .id(hf.getId())
+                    .payNum(pro.getPayNum())
+                    .itemId(pro.getItemId())
+                    .title(pro.getTitle())
+                    .createTime(pro.getCreateTime())
+                    .sellerId(hf.getSellerId())
+                    .url(pro.getUrl())
+                    .sellerName(hf.getSellerName())
+                    .build();
+            rankingList.add(ranking);
+        }
+
+        return rankingList;
     }
 
     public int countBySellerId(String sellerId){
