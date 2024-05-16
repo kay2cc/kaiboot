@@ -24,7 +24,7 @@
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <java.version>1.8</java.version>
 		<swagger.version>2.8.0</swagger.version>
-		<hutool.version>4.1.18</hutool.version>
+		<hutool.version>5.8.21</hutool.version>
 		<fastjson.version>1.2.45</fastjson.version>
         <mysql.version>5.1.38</mysql.version>
         <gson.version>2.8.5</gson.version>
